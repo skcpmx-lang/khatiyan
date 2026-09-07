@@ -216,4 +216,10 @@ abstract class EmiDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun restorePayments(rows: List<EmiPaymentEntity>)
+
+    @Query("SELECT * FROM emi_payment_allocations")
+    abstract suspend fun getAllAllocations(): List<EmiAllocationEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun restoreAllocations(rows: List<EmiAllocationEntity>)
 }

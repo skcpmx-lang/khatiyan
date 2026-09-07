@@ -235,4 +235,10 @@ abstract class LoanDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun restorePayments(rows: List<LoanPaymentEntity>)
+
+    @Query("SELECT * FROM loan_payment_allocations")
+    abstract suspend fun getAllAllocations(): List<LoanAllocationEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun restoreAllocations(rows: List<LoanAllocationEntity>)
 }

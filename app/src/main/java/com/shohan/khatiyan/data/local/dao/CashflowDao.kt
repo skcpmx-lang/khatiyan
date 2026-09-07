@@ -93,4 +93,24 @@ abstract class CashflowDao {
 
     @Query("SELECT DISTINCT category FROM expenses ORDER BY category COLLATE NOCASE")
     abstract suspend fun usedExpenseCategories(): List<String>
+
+    // ---- backup ----
+
+    @Query("SELECT * FROM incomes")
+    abstract suspend fun getAllIncomes(): List<IncomeEntity>
+
+    @Query("SELECT * FROM expenses")
+    abstract suspend fun getAllExpenses(): List<ExpenseEntity>
+
+    @Query("SELECT * FROM custom_categories")
+    abstract suspend fun getAllCategories(): List<CategoryEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun restoreIncomes(rows: List<IncomeEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun restoreExpenses(rows: List<ExpenseEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun restoreCategories(rows: List<CategoryEntity>)
 }
