@@ -43,8 +43,10 @@ class AllocationAndOverpaymentTest {
             Allocation.Bucket(id = 11, totalPaisa = 3_000, paidBeforePaisa = 1_000),
         )
         val map = Allocation.fifo(buckets, 6_000)
+        // 6,000 paid: bucket 10 (5,000 open) absorbs 5,000; bucket 11 (2,000 open) gets
+        // the remaining 1,000 on top of its 1,000 already paid → total 2,000 (not fully covered).
         assertEquals(5_000L, map[10])
-        assertEquals(3_000L, map[11])
+        assertEquals(2_000L, map[11])
     }
 
     @Test

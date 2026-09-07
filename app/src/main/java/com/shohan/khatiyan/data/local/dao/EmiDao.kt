@@ -39,8 +39,11 @@ abstract class EmiDao {
     @Query("SELECT * FROM emi_purchases WHERE id = :id")
     abstract suspend fun getEmi(id: Long): EmiPurchaseEntity?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun upsertEmi(emi: EmiPurchaseEntity): Long
+    @Insert
+    abstract suspend fun insertEmi(emi: EmiPurchaseEntity): Long
+
+    @Update
+    abstract suspend fun updateEmi(emi: EmiPurchaseEntity)
 
     @Query("UPDATE emi_purchases SET archived = :archived WHERE id = :id")
     abstract suspend fun setArchived(id: Long, archived: Boolean)
@@ -124,7 +127,7 @@ abstract class EmiDao {
 
     @Transaction
     open suspend fun saveEmiWithSchedule(emi: EmiPurchaseEntity, schedule: List<InstallmentPlan>) {
-        val emiId = upsertEmi(emi)
+        val emiId = if (emi.id == 0L) insertEmi(emi) else { updateEmi(emi); emi.id }
         deleteAllocationsForEmi(emiId)
         deleteInstallments(emiId)
         if (schedule.isEmpty()) return

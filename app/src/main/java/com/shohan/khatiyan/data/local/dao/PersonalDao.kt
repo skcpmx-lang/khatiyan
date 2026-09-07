@@ -40,8 +40,11 @@ abstract class PersonalDao {
     @Query("SELECT * FROM persons WHERE id = :id")
     abstract suspend fun getPerson(id: Long): PersonEntity?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun upsertPerson(person: PersonEntity): Long
+    @Insert
+    abstract suspend fun insertPerson(person: PersonEntity): Long
+
+    @Update
+    abstract suspend fun updatePerson(person: PersonEntity)
 
     @Query("UPDATE persons SET archived = :archived WHERE id = :id")
     abstract suspend fun setArchived(id: Long, archived: Boolean)

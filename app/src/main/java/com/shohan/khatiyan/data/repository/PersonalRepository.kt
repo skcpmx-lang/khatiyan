@@ -38,12 +38,11 @@ class PersonalRepository(private val db: KhatiyanDatabase) {
 
     suspend fun savePerson(person: PersonEntity): Long {
         if (person.name.isBlank()) throw FinanceValidationException("নাম লিখুন।")
-        val id = dao.upsertPerson(
-            person.copy(
-                relationship = person.relationship.ifBlank { RELATIONSHIPS.first() },
-                createdAtIso = if (person.id == 0L) BnDates.toIso(BnDates.today()) else person.createdAtIso,
-            ),
+        val entity = person.copy(
+            relationship = person.relationship.ifBlank { RELATIONSHIPS.first() },
+            createdAtIso = if (person.id == 0L) BnDates.toIso(BnDates.today()) else person.createdAtIso,
         )
+        val id = if (person.id == 0L) dao.insertPerson(entity) else { dao.updatePerson(entity); person.id }
         DataBus.poke()
         return id
     }

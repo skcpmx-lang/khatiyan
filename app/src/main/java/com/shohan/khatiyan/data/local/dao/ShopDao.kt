@@ -37,8 +37,18 @@ abstract class ShopDao {
     @Query("SELECT id, name FROM shops WHERE archived = 0 ORDER BY name COLLATE NOCASE")
     abstract suspend fun getActiveShopRefs(): List<com.shohan.khatiyan.data.local.query.ShopRefRow>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun upsertShop(shop: ShopEntity): Long
+    // Insert vs update are split deliberately: a REPLACE on the parent row would
+    // DELETE+re-INSERT it, and the FKs on shop_credits/shop_payments are ON DELETE
+    // CASCADE — replacing a parent silently destroys the whole ledger (caught by
+    // ShopRepositoryTest on CI). Editing must UPDATE in place.
+    @Insert
+    abstract suspend fun insertShop(shop: ShopEntity): Long
+
+    @Update
+    abstract suspend fun updateShop(shop: ShopEntity)
+
+    @Query("UPDATE shops SET updatedAtIso = :nowIso WHERE id = :id")
+    abstract suspend fun touchShop(id: Long, nowIso: String)
 
     @Delete
     abstract suspend fun deleteShop(shop: ShopEntity)

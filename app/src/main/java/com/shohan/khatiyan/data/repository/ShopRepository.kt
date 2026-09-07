@@ -88,12 +88,16 @@ class ShopRepository(private val db: KhatiyanDatabase) {
             throw FinanceValidationException("দোকানের নাম লিখুন।")
         }
         val now = BnDates.toIso(BnDates.today())
-        val id = dao.upsertShop(
-            shop.copy(
-                createdAtIso = if (shop.id == 0L) now else shop.createdAtIso,
-                updatedAtIso = now,
-            ),
+        val entity = shop.copy(
+            createdAtIso = if (shop.id == 0L) now else shop.createdAtIso,
+            updatedAtIso = now,
         )
+        val id = if (shop.id == 0L) {
+            dao.insertShop(entity)
+        } else {
+            dao.updateShop(entity)
+            shop.id
+        }
         DataBus.poke()
         return id
     }
@@ -129,9 +133,7 @@ class ShopRepository(private val db: KhatiyanDatabase) {
                 )
             },
         )
-        dao.getShop(draft.shopId)?.let {
-            dao.upsertShop(it.copy(updatedAtIso = BnDates.toIso(BnDates.today())))
-        }
+        dao.touchShop(draft.shopId, BnDates.toIso(BnDates.today()))
         DataBus.poke()
     }
 
@@ -171,9 +173,7 @@ class ShopRepository(private val db: KhatiyanDatabase) {
                 note = note.trim(),
             ),
         )
-        dao.getShop(shopId)?.let {
-            dao.upsertShop(it.copy(updatedAtIso = dateIso))
-        }
+        dao.touchShop(shopId, dateIso)
         DataBus.poke()
     }
 

@@ -43,8 +43,11 @@ abstract class LoanDao {
     @Query("SELECT * FROM loans WHERE id = :id")
     abstract suspend fun getLoan(id: Long): LoanEntity?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun upsertLoan(loan: LoanEntity): Long
+    @Insert
+    abstract suspend fun insertLoan(loan: LoanEntity): Long
+
+    @Update
+    abstract suspend fun updateLoan(loan: LoanEntity)
 
     @Query("UPDATE loans SET archived = :archived WHERE id = :id")
     abstract suspend fun setArchived(id: Long, archived: Boolean)
@@ -133,7 +136,7 @@ abstract class LoanDao {
      */
     @Transaction
     open suspend fun saveLoanWithSchedule(loan: LoanEntity, schedule: List<InstallmentPlan>) {
-        val loanId = if (loan.id == 0L) upsertLoan(loan) else { upsertLoan(loan); loan.id }
+        val loanId = if (loan.id == 0L) insertLoan(loan) else { updateLoan(loan); loan.id }
         deleteAllocationsForLoan(loanId)
         deleteInstallments(loanId)
         if (schedule.isEmpty()) return
