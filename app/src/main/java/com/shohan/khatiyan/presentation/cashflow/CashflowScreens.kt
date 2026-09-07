@@ -216,7 +216,7 @@ fun CashflowScreen(navController: NavController, container: AppContainer) {
                     unfocusedIndicatorColor = Color.Transparent,
                 ),
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                leadingIcon = { Icon(androidx.compose.material.icons.Icons.AutoMirrored.Filled.Search, null) },
+                leadingIcon = { Icon(com.shohan.khatiyan.ui.icons.KhatiyanIcons.Search, null) },
             )
 
             Spacer(Modifier.height(4.dp))

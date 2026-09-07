@@ -186,7 +186,7 @@ fun DashboardScreen(navController: NavController, container: AppContainer) {
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Icon(
-                                    if (net >= 0) androidx.compose.material.icons.Icons.Filled.TrendingUp else androidx.compose.material.icons.Icons.Filled.TrendingDown,
+                                    if (net >= 0) com.shohan.khatiyan.ui.icons.KhatiyanIcons.TrendingUp else com.shohan.khatiyan.ui.icons.KhatiyanIcons.TrendingDown,
                                     contentDescription = null,
                                     tint = if (net >= 0) KhatiyanBrand.Success else KhatiyanBrand.Danger,
                                 )

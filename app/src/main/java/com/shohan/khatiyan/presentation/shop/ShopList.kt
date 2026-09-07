@@ -117,7 +117,7 @@ fun ShopListContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 6.dp),
-            leadingIcon = { Icon(androidx.compose.material.icons.Icons.AutoMirrored.Filled.Search, null) },
+            leadingIcon = { Icon(com.shohan.khatiyan.ui.icons.KhatiyanIcons.Search, null) },
             trailingIcon = {
                 androidx.compose.material3.TextButton(onClick = vm::toggleArchived) {
                     Text(

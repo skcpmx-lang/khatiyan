@@ -23,7 +23,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.automirrored.filled.Search
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -466,7 +465,7 @@ fun KhatiyanScaffold(
 @Composable
 fun SearchIconButton(onClick: () -> Unit) {
     IconButton(onClick = onClick) {
-        Icon(Icons.AutoMirrored.Filled.Search, contentDescription = "সব জায়গায় খুঁজুন")
+        Icon(com.shohan.khatiyan.ui.icons.KhatiyanIcons.Search, contentDescription = "সব জায়গায় খুঁজুন")
     }
 }
 
