@@ -136,7 +136,7 @@ class PdfExporter(private val context: Context) {
             canvas.drawText(who, margin, 78f, Paint(small).apply { color = Color.rgb(0xD9, 0xE9, 0xDF) })
             val created = "তৈরি: ${BnDates.formatLong(BnDates.today())}"
             val cw = small.measureText(created)
-            canvas.drawText(created, pageW - margin - cw, 78f, Paint(small).apply { color = Color.rgb(0xD9, 0xE9, 0xDF) }))
+            canvas.drawText(created, pageW - margin - cw, 78f, Paint(small).apply { color = Color.rgb(0xD9, 0xE9, 0xDF) })
             y = 120f
 
             // ---- period + summary ---------------------------------------------------------

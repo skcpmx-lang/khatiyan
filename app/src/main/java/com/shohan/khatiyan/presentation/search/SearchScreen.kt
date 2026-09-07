@@ -45,6 +45,7 @@ import com.shohan.khatiyan.ui.components.KhatiyanScaffold
 import com.shohan.khatiyan.ui.components.PillTone
 import com.shohan.khatiyan.ui.components.SectionTitle
 import com.shohan.khatiyan.ui.components.StatusPill
+import com.shohan.khatiyan.utilities.BnText
 import com.shohan.khatiyan.ui.theme.KhatiyanBrand
 import com.shohan.khatiyan.utilities.containerFactory
 import kotlinx.coroutines.FlowPreview
@@ -106,7 +107,7 @@ fun SearchScreen(navController: NavController, container: AppContainer) {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     if (res.shops.isNotEmpty()) {
-                        SectionTitle("দোকান (${res.shops.size})")
+                        SectionTitle("দোকান (" + BnText.toBnDigits(res.shops.size.toString()) + ")")
                         res.shops.forEach { shop ->
                             HitRow(
                                 title = shop.name,
@@ -117,7 +118,7 @@ fun SearchScreen(navController: NavController, container: AppContainer) {
                         }
                     }
                     if (res.people.isNotEmpty()) {
-                        SectionTitle("মানুষ (${res.people.size})")
+                        SectionTitle("মানুষ (" + BnText.toBnDigits(res.people.size.toString()) + ")")
                         res.people.forEach { person ->
                             HitRow(
                                 title = person.name,
@@ -128,7 +129,7 @@ fun SearchScreen(navController: NavController, container: AppContainer) {
                         }
                     }
                     if (res.loans.isNotEmpty()) {
-                        SectionTitle("ঋণ (${res.loans.size})")
+                        SectionTitle("ঋণ (" + BnText.toBnDigits(res.loans.size.toString()) + ")")
                         res.loans.forEach { loan ->
                             HitRow(
                                 title = loan.loanName.ifBlank { loan.institution },
@@ -139,7 +140,7 @@ fun SearchScreen(navController: NavController, container: AppContainer) {
                         }
                     }
                     if (res.emis.isNotEmpty()) {
-                        SectionTitle("EMI (${res.emis.size})")
+                        SectionTitle("EMI (" + BnText.toBnDigits(res.emis.size.toString()) + ")")
                         res.emis.forEach { emi ->
                             HitRow(
                                 title = emi.productName,
@@ -150,7 +151,7 @@ fun SearchScreen(navController: NavController, container: AppContainer) {
                         }
                     }
                     if (res.debts.isNotEmpty()) {
-                        SectionTitle("ধারের এন্ট্রি (${res.debts.size})")
+                        SectionTitle("ধারের এন্ট্রি (" + BnText.toBnDigits(res.debts.size.toString()) + ")")
                         res.debts.forEach { debt ->
                             HitRow(
                                 title = "${debt.personName} — ${Money.format(debt.amountPaisa)}",
@@ -162,7 +163,7 @@ fun SearchScreen(navController: NavController, container: AppContainer) {
                         }
                     }
                     if (res.entries.isNotEmpty()) {
-                        SectionTitle("লেনদেন (${res.entries.size})")
+                        SectionTitle("লেনদেন (" + BnText.toBnDigits(res.entries.size.toString()) + ")")
                         res.entries.forEach { entry ->
                             LedgerHitRow(entry)
                         }

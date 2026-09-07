@@ -270,7 +270,9 @@ class LoanEditViewModel(private val container: AppContainer, private val loanId:
         viewModelScope.launch {
             if (loanId != null) {
                 container.db.loanDao().getLoan(loanId)?.let { l ->
+                    val schedCount = container.db.loanDao().getInstallments(loanId).size
                     _state.value = _state.value.copy(
+                        count = if (schedCount > 0) schedCount.toString() else _state.value.count,
                         institution = l.institution,
                         loanName = l.loanName,
                         principal = Money.formatPlain(l.principalPaisa),
