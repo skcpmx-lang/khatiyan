@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  contents: read
+  issues: write
 on:
   push:
     branches: ["**"]
@@ -81,3 +84,8 @@ jobs:
           path: apk-sha256.txt
           retention-days: 30
 
+      - name: Publish failure digest
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/post-ci-failure.sh "$GITHUB_SHA"
