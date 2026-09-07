@@ -16,7 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteOutline
-import androidx.compose.material.icons.outlined.Download
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Storefront
 import androidx.compose.material3.FloatingActionButton
@@ -177,7 +177,7 @@ fun ShopDetailScreen(navController: NavController, container: AppContainer, shop
             IconButton(onClick = {
                 csvLauncher.launch("khatiyan-${detail?.shop?.name?.replace(' ', '-') ?: "shop"}-$shopId.csv")
             }) {
-                Icon(Icons.Outlined.Download, contentDescription = "CSV হিসাব নামান")
+                Icon(Icons.Filled.Download, contentDescription = "CSV হিসাব নামান")
             }
         },
         floatingActionButton = {
