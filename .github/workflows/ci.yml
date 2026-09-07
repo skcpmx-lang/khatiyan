@@ -32,7 +32,9 @@ jobs:
           chmod +x gradlew
 
       - name: Unit tests (JVM + Robolectric)
-        run: ./gradlew --no-daemon testDebugUnitTest --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon testDebugUnitTest --stacktrace 2>&1 | tee /tmp/gradle.log
 
       - name: Upload test reports
         if: always()
@@ -44,7 +46,9 @@ jobs:
           retention-days: 14
 
       - name: Assemble debug + release APKs
-        run: ./gradlew --no-daemon assembleDebug assembleRelease --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon assembleDebug assembleRelease --stacktrace 2>&1 | tee -a /tmp/gradle.log
 
       - name: Verify APKs (package, label, versions)
         run: |
@@ -76,3 +80,20 @@ jobs:
           name: apk-sha256
           path: apk-sha256.txt
           retention-days: 30
+
+      - name: Publish failure digest as issue
+        if: failure()
+        permissions:
+          issues: write
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "CI run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            echo '```'
+            grep -E "^(e: |.*FAILURE:|.*> Task .*FAILED|.*error:|Caused by|What went wrong)" -A 4 /tmp/gradle.log | tail -180
+            echo '```'
+          } > /tmp/fail.md
+          if [ -s /tmp/fail.md ]; then
+            gh issue create --title "CI failure on ${GITHUB_REF_NAME} @ ${GITHUB_SHA::7}" --body-file /tmp/fail.md --label ci-failure || true
+          fi
