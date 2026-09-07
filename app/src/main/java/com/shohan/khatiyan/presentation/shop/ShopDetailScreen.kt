@@ -62,6 +62,7 @@ import com.shohan.khatiyan.ui.theme.KhatiyanBrand
 import com.shohan.khatiyan.utilities.DataBus
 import com.shohan.khatiyan.utilities.containerFactory
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -90,23 +91,36 @@ class ShopDetailViewModel(private val container: AppContainer, private val shopI
         }
     }
 
-    fun recordPayment(
+    suspend fun recordPayment(
         amount: Long,
         method: String,
         dateIso: String,
         note: String,
         allow: Boolean,
-    ): OverpaymentException? {
-        return try {
-            kotlinx.coroutines.runBlocking {
-                container.shopRepo.addPayment(shopId, dateIso, amount, method, note, allow)
-            }
-            events.tryEmit("${Money.format(amount)} পরিশোধ যোগ হয়েছে")
+    ): OverpaymentException? =
+        try {
+            container.shopRepo.addPayment(shopId, dateIso, amount, method, note, allow)
+            events.emit("${Money.format(amount)} পরিশোধ যোগ হয়েছে")
             null
         } catch (e: OverpaymentException) {
             if (allow) null else e
         }
-    }
+
+    suspend fun updatePayment(
+        payment: com.shohan.khatiyan.data.local.entity.ShopPaymentEntity,
+        amount: Long,
+        method: String,
+        dateIso: String,
+        note: String,
+        allow: Boolean,
+    ): OverpaymentException? =
+        try {
+            container.shopRepo.updatePayment(payment, amount, dateIso, method, note, allow)
+            events.emit("পরিশোধের এন্ট্রি হালনাগাদ হয়েছে")
+            null
+        } catch (e: OverpaymentException) {
+            if (allow) null else e
+        }
 
     fun deletePayment(paymentId: Long) {
         viewModelScope.launch {
@@ -325,6 +339,22 @@ fun ShopDetailScreen(navController: NavController, container: AppContainer, shop
         onDismiss = { showPayment = false },
         submit = { amount, method, date, note, allow -> vm.recordPayment(amount, method, date, note, allow) },
     )
+
+    val editing = editPayment
+    if (editing != null) {
+        com.shohan.khatiyan.presentation.loan.PaymentEntryEditDialog(
+            visible = true,
+            title = "পরিশোধ সম্পাদনা",
+            symbol = "৳",
+            initialAmount = Money.formatPlain(editing.amountPaisa),
+            initialNote = editing.note,
+            initialDate = editing.dateIso,
+            onDismiss = { editPayment = null },
+            submit = { amount, method, date, note, allow ->
+                vm.updatePayment(editing, amount, method, date, note, allow)
+            },
+        )
+    }
 
     val toDelete = deleteTarget
     if (toDelete != null) {

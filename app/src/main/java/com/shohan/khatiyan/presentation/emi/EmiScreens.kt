@@ -209,7 +209,6 @@ private fun EmiRowCard(row: EmiRow, onClick: () -> Unit) {
             color = KhatiyanBrand.Gold,
             trackColor = MaterialTheme.colorScheme.surfaceVariant,
             strokeCap = androidx.compose.ui.graphics.StrokeCap.Round,
-            gapSize = 0.dp,
         )
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
