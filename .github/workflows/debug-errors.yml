@@ -1,6 +1,10 @@
 name: Debug Compile Errors
 
 on:
+  push:
+    branches: ["arena/**"]
+    paths:
+      - ".github/workflows/debug-errors.yml"
   workflow_dispatch:
 
 permissions:
