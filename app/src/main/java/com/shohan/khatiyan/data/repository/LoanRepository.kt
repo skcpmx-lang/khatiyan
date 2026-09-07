@@ -2,6 +2,7 @@ package com.shohan.khatiyan.data.repository
 
 import com.shohan.khatiyan.core.BnDates
 import com.shohan.khatiyan.core.Money
+import androidx.room.withTransaction
 import com.shohan.khatiyan.data.local.KhatiyanDatabase
 import com.shohan.khatiyan.data.local.entity.LoanEntity
 import com.shohan.khatiyan.data.local.entity.LoanInstallmentEntity
@@ -178,6 +179,38 @@ class LoanRepository(private val db: KhatiyanDatabase) {
 
     suspend fun deletePayment(loanId: Long, paymentId: Long) {
         dao.deletePayment(paymentId)
+        DataBus.poke()
+    }
+
+    /**
+     * Edit a recorded payment as delete + re-record inside ONE Room
+     * transaction, so a failure can never drop money silently.
+     */
+    suspend fun updatePayment(
+        loanId: Long,
+        paymentId: Long,
+        dateIso: String,
+        amountPaisa: Long,
+        method: String,
+        note: String,
+        allowOverpayment: Boolean,
+    ) {
+        val existing = dao.getPayment(paymentId) ?: throw FinanceValidationException("পরিশোধের রেকর্ডটি পাওয়া যায়নি।")
+        if (amountPaisa <= 0L) throw FinanceValidationException("টাকার পরিমাণ লিখুন।")
+        val paidOthers = dao.getPaymentsRecent(loanId).filterNot { it.id == paymentId }.fold(0L) { a, p -> Money.addClamped(a, p.amountPaisa) }
+        val loanEntity = dao.getLoan(loanId) ?: throw FinanceValidationException("লোনটি খুঁজে পাওয়া যায়নি।")
+        val openRemaining = loanEntity.totalPayablePaisa - paidOthers
+        if (amountPaisa > openRemaining && !allowOverpayment) {
+            throw OverpaymentException(openRemaining.coerceAtLeast(0), amountPaisa)
+        }
+        db.withTransaction {
+            dao.deletePayment(paymentId)
+            val open = dao.getInstallmentsByDue(loanId).filter { it.paidPaisa < it.amountPaisa }
+            dao.recordPayment(
+                LoanPaymentEntity(loanId = loanId, dateIso = dateIso, amountPaisa = amountPaisa, method = method, note = note.trim()),
+                open,
+            )
+        }
         DataBus.poke()
     }
 

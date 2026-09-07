@@ -2,6 +2,7 @@ package com.shohan.khatiyan.data.repository
 
 import com.shohan.khatiyan.core.BnDates
 import com.shohan.khatiyan.core.Money
+import androidx.room.withTransaction
 import com.shohan.khatiyan.data.local.KhatiyanDatabase
 import com.shohan.khatiyan.data.local.entity.EmiInstallmentEntity
 import com.shohan.khatiyan.data.local.entity.EmiPaymentEntity
@@ -163,6 +164,35 @@ class EmiRepository(private val db: KhatiyanDatabase) {
 
     suspend fun deletePayment(emiId: Long, paymentId: Long) {
         dao.deletePayment(paymentId)
+        DataBus.poke()
+    }
+
+    /** Edit a payment = delete + re-record in one transaction (see LoanRepository). */
+    suspend fun updatePayment(
+        emiId: Long,
+        paymentId: Long,
+        dateIso: String,
+        amountPaisa: Long,
+        method: String,
+        note: String,
+        allowOverpayment: Boolean,
+    ) {
+        val existing = dao.getPayment(paymentId) ?: throw FinanceValidationException("পরিশোধের রেকর্ডটি পাওয়া যায়নি।")
+        if (amountPaisa <= 0L) throw FinanceValidationException("টাকার পরিমাণ লিখুন।")
+        val paidOthers = dao.getPaymentsRecent(emiId).filterNot { it.id == paymentId }.fold(0L) { a, p -> Money.addClamped(a, p.amountPaisa) }
+        val emi = dao.getEmi(emiId) ?: throw FinanceValidationException("EMI রেকর্ডটি খুঁজে পাওয়া যায়নি।")
+        val openRemaining = emi.financedPaisa - paidOthers
+        if (amountPaisa > openRemaining && !allowOverpayment) {
+            throw OverpaymentException(openRemaining.coerceAtLeast(0), amountPaisa)
+        }
+        db.withTransaction {
+            dao.deletePayment(paymentId)
+            val open = dao.getInstallmentsByDue(emiId).filter { it.paidPaisa < it.amountPaisa }
+            dao.recordPayment(
+                EmiPaymentEntity(emiId = emiId, dateIso = dateIso, amountPaisa = amountPaisa, method = method, note = note.trim()),
+                open,
+            )
+        }
         DataBus.poke()
     }
 
