@@ -58,6 +58,9 @@ import kotlinx.coroutines.launch
 fun OnboardingScreen(container: AppContainer) {
     val pagerState = rememberPagerState(pageCount = { 4 })
     val scope = rememberCoroutineScope()
+    val notifPermLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
+    ) { /* result handled by the system; reminders simply stay silent until granted */ }
 
     var userName by remember { mutableStateOf("") }
     var currency by remember { mutableStateOf("৳") }
@@ -162,6 +165,9 @@ fun OnboardingScreen(container: AppContainer) {
                     if (name.isEmpty() || name.length > 60) {
                         error = "১–৬০ অক্ষরের নাম লিখুন।"
                     } else {
+                        if (android.os.Build.VERSION.SDK_INT >= 33) {
+                            notifPermLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                        }
                         scope.launch {
                             container.db.profileDao().upsertProfile(
                                 UserProfileEntity(

@@ -47,11 +47,19 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            // v1.0.0 ships un-minified on purpose: R8 keep-rules for the backup
+            // serializer paths can't be runtime-verified by CI, and a silently
+            // broken backup is worse than a bigger APK. Minification + resource
+            // shrinking are slated for 1.0.1 with instrumented coverage.
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             if (signingConfigured) {
                 signingConfig = signingConfigs.getByName("khatiyanRelease")
+            } else {
+                // Fallback (documented in RELEASE.md): debug-signed release keeps the
+                // CI artifact installable on test devices even before real keys exist.
+                signingConfig = signingConfigs.getByName("debug")
             }
         }
         debug {

@@ -252,6 +252,9 @@ fun SettingsScreen(navController: NavController, container: AppContainer) {
     ) { uri ->
         if (uri != null) confirmRestoreUri = uri
     }
+    val notifPermLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
+    ) { granted -> if (!granted) pendingMessage = "নোটিফিকেশন পারমিশন দেওয়া হয়নি — রিমাইন্ডার দেখানো হতে পারে না।" }
     val csvLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.CreateDocument("text/csv"),
     ) { uri ->
@@ -302,7 +305,15 @@ fun SettingsScreen(navController: NavController, container: AppContainer) {
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
-                    Switch(checked = settings.notificationsEnabled, onCheckedChange = vm::setReminderEnabled)
+                    Switch(
+                        checked = settings.notificationsEnabled,
+                        onCheckedChange = { on ->
+                            vm.setReminderEnabled(on)
+                            if (on && android.os.Build.VERSION.SDK_INT >= 33) {
+                                notifPermLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                            }
+                        },
+                    )
                 }
                 Spacer(Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
