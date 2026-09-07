@@ -226,6 +226,7 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     }
 }
 
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController, container: AppContainer) {
     val vm: SettingsViewModel = viewModel(factory = containerFactory { SettingsViewModel(it) })
@@ -731,7 +732,7 @@ private fun hourBn(hour: Int): String {
 }
 
 private fun authenticateWithBiometrics(context: android.content.Context, onResult: (Boolean) -> Unit) {
-    val activity = context as? android.app.Activity ?: run { onResult(false); return }
+    val activity = context as? androidx.fragment.app.FragmentActivity ?: run { onResult(false); return }
     val prompt = BiometricPrompt(
         activity,
         androidx.core.content.ContextCompat.getMainExecutor(context),

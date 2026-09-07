@@ -53,6 +53,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
+@OptIn(FlowPreview::class)
 class SearchViewModel(private val container: AppContainer) : ViewModel() {
     private val _query = MutableStateFlow("")
     val query = _query
@@ -60,7 +61,6 @@ class SearchViewModel(private val container: AppContainer) : ViewModel() {
     private val _hits = MutableStateFlow<SearchResults?>(null)
     val hits = _hits
 
-    @OptIn(FlowPreview::class)
     init {
         viewModelScope.launch {
             _query.debounce(220).collect { q ->

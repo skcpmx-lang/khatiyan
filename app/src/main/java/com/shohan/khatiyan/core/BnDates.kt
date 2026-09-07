@@ -45,11 +45,11 @@ object BnDates {
 
     /** "৮ সেপ্টেম্বর ২০২৬" */
     fun formatLong(d: LocalDate): String =
-        "${bn(d.dayOfMonth)} ${MONTHS[d.monthValue - 1]} ${bn(d.year)}"
+        "${bn(d.dayOfMonth.toLong())} ${MONTHS[d.monthValue - 1]} ${bn(d.year.toLong())}"
 
     /** "৮ সেপ্টে ২০২৬" */
     fun formatShort(d: LocalDate): String =
-        "${bn(d.dayOfMonth)} ${MONTHS_SHORT[d.monthValue - 1]} ${bn(d.year)}"
+        "${bn(d.dayOfMonth.toLong())} ${MONTHS_SHORT[d.monthValue - 1]} ${bn(d.year.toLong())}"
 
     /** "সেপ্টেম্বর ২০২৬" */
     fun formatMonthYear(y: Int, m: Int): String = "${MONTHS[m - 1]} ${bn(y.toLong())}"

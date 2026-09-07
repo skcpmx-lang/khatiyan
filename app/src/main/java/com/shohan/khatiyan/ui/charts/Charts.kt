@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
+import kotlin.math.min
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -64,7 +65,7 @@ fun DonutChart(
                     useCenter = false,
                     style = Stroke(width = stroke),
                     size = Size(d, d),
-                    topStart = androidx.compose.ui.geometry.Offset(topLeftX, topLeftY),
+                    topLeft = androidx.compose.ui.geometry.Offset(topLeftX, topLeftY),
                 )
             } else {
                 var start = -90f
@@ -78,7 +79,7 @@ fun DonutChart(
                         useCenter = false,
                         style = Stroke(width = stroke),
                         size = Size(d, d),
-                        topStart = androidx.compose.ui.geometry.Offset(topLeftX, topLeftY),
+                        topLeft = androidx.compose.ui.geometry.Offset(topLeftX, topLeftY),
                     )
                     start += sweep
                 }
@@ -261,7 +262,7 @@ fun ProgressRing(
                 useCenter = false,
                 style = Stroke(width = stroke),
                 size = Size(d, d),
-                topStart = androidx.compose.ui.geometry.Offset(off, off),
+                topLeft = androidx.compose.ui.geometry.Offset(off, off),
             )
             drawArc(
                 color = color,
@@ -270,7 +271,7 @@ fun ProgressRing(
                 useCenter = false,
                 style = Stroke(width = stroke, cap = StrokeCap.Round),
                 size = Size(d, d),
-                topStart = androidx.compose.ui.geometry.Offset(off, off),
+                topLeft = androidx.compose.ui.geometry.Offset(off, off),
             )
         }
         if (centerText.isNotEmpty()) {

@@ -512,9 +512,9 @@ private fun UpcomingCard(
             } else {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        MiniStat("আজ", dueTodayCount, KhatiyanBrand.Danger)
-                        MiniStat("৭ দিনে", dueWeekCount, KhatiyanBrand.Warning)
-                        MiniStat("ওভারডিউ", overdueCount, if (overdueCount > 0) KhatiyanBrand.Danger else KhatiyanBrand.InkMuted)
+                        MiniStat("আজ", dueTodayCount, KhatiyanBrand.Danger, Modifier.weight(1f))
+                        MiniStat("৭ দিনে", dueWeekCount, KhatiyanBrand.Warning, Modifier.weight(1f))
+                        MiniStat("ওভারডিউ", overdueCount, if (overdueCount > 0) KhatiyanBrand.Danger else KhatiyanBrand.InkMuted, Modifier.weight(1f))
                     }
                     items.take(6).forEach { item ->
                         DueItemRow(item, onOpen)
@@ -534,10 +534,9 @@ private fun UpcomingCard(
 }
 
 @Composable
-private fun MiniStat(label: String, count: Int, color: Color) {
+private fun MiniStat(label: String, count: Int, color: Color, modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
-            .weight(1f)
+        modifier = modifier
             .background(color.copy(alpha = 0.08f), MaterialTheme.shapes.small)
             .padding(8.dp),
     ) {

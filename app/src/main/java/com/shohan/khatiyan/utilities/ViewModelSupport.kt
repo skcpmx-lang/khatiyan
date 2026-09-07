@@ -2,7 +2,7 @@ package com.shohan.khatiyan.utilities
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.shohan.khatiyan.KhatiyanApp
 import com.shohan.khatiyan.di.AppContainer
@@ -13,8 +13,8 @@ import com.shohan.khatiyan.di.AppContainer
  */
 fun <VM : ViewModel> containerFactory(create: (AppContainer) -> VM): ViewModelProvider.Factory =
     viewModelFactory {
-        initializer { extras: CreationExtras ->
-            val app = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as KhatiyanApp
+        initializer {
+            val app = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as KhatiyanApp
             create(app.container)
         }
     }

@@ -645,7 +645,7 @@ fun EmiDetailScreen(navController: NavController, container: AppContainer, emiId
                             Text(Money.format(p.amountPaisa), style = MaterialTheme.typography.titleMedium, color = KhatiyanBrand.Success)
                             IconButton(onClick = { editPayment = p }) { Icon(Icons.Outlined.Edit, "সম্পাদনা", Modifier.size(18.dp)) }
                             IconButton(onClick = { vm.deletePayment(p.id) }) {
-                                Icon(Icons.Outlined.DeleteOutline, "মুছুন", tint = MaterialTheme.colorScheme.error, Modifier.size(18.dp))
+                                Icon(Icons.Outlined.DeleteOutline, "মুছুন", Modifier.size(18.dp), tint = MaterialTheme.colorScheme.error)
                             }
                         }
                     }

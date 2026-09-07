@@ -45,9 +45,9 @@ object NotificationHelper {
 
     fun showPaymentDigest(context: Context, overdueCount: Int, overduePaisa: Long, dueTodayCount: Int, dueTodayPaisa: Long, tomorrowCount: Int, symbol: String) {
         val parts = ArrayList<String>()
-        if (dueTodayCount > 0) parts += "আজ $dueTodayCountটি পেমেন্ট দিতে হবে (${Money.format(dueTodayPaisa, symbol)})"
-        if (overdueCount > 0) parts += "সময় পার হওয়া $overdueCountটি পেমেন্ট (${Money.format(overduePaisa, symbol)})"
-        if (tomorrowCount > 0) parts += "আগামীকাল $tomorrowCountটি পেমেন্ট আসন্ন"
+        if (dueTodayCount > 0) parts += "আজ ${dueTodayCount}টি পেমেন্ট দিতে হবে (${Money.format(dueTodayPaisa, symbol)})"
+        if (overdueCount > 0) parts += "সময় পার হওয়া ${overdueCount}টি পেমেন্ট (${Money.format(overduePaisa, symbol)})"
+        if (tomorrowCount > 0) parts += "আগামীকাল ${tomorrowCount}টি পেমেন্ট আসন্ন"
         if (parts.isEmpty()) return
 
         val intent = Intent(context, MainActivity::class.java).apply {
@@ -72,7 +72,7 @@ object NotificationHelper {
             .setContentTitle("পেমেন্টের হিসাব — ${BnDates.formatLong(BnDates.today())}")
             .setContentText(parts.joinToString(" · "))
             .setStyle(
-                Notification.BigTextStyle().bigText(
+                NotificationCompat.BigTextStyle().bigText(
                     "খতিয়ান — পেমেন্ট স্মরণ\n\n" + parts.joinToString("\n") { "• $it" },
                 ),
             )

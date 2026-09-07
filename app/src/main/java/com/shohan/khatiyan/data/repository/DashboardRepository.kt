@@ -100,8 +100,8 @@ class DashboardRepository(
                     overduePaisa = windows.overdue.paisa,
                 ),
                 totalDebtPaisa = totalOutstanding,
-                biggestDebtLabel = biggest?.first,
-                biggestDebtPaisa = biggest?.second ?: 0,
+                biggestDebtLabel = biggest?.label,
+                biggestDebtPaisa = biggest?.paisa ?: 0,
                 hasAnyData = hasAnyData,
             ),
         )

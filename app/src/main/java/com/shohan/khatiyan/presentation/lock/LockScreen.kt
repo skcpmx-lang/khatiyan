@@ -30,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -212,7 +213,7 @@ private fun promptBiometric(
     container: AppContainer,
     onSuccess: () -> Unit,
 ) {
-    val activity = context as? android.app.Activity ?: return
+    val activity = context as? androidx.fragment.app.FragmentActivity ?: return
     val prompt = BiometricPrompt(
         activity,
         ContextCompat.getMainExecutor(context),

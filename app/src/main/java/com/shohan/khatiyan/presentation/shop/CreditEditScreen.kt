@@ -285,7 +285,7 @@ fun CreditEditScreen(navController: NavController, container: AppContainer, shop
             }
 
             androidx.compose.material3.OutlinedButton(
-                onClick = { vm.update { it.copy(items = it.items + ItemDraft()) } },
+                onClick = { vm.update { it.copy(items = it.items + CreditEditViewModel.ItemDraft()) } },
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
             ) {
@@ -340,3 +340,4 @@ private fun ChoiceChipsRowCompact(options: List<String>, selected: String, onSel
         ChoiceChipsRow(options = options, selected = selected.ifEmpty { options.first() }, onSelect = onSelect)
     }
 }
+import kotlinx.coroutines.launch

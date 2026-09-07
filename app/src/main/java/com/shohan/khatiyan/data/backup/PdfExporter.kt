@@ -31,7 +31,8 @@ class PdfExporter(private val context: Context) {
             val doc = PdfDocument()
             var pageIndex = 1
             var pageInfo = PdfDocument.PageInfo.Builder(pageW, pageH, pageIndex).create()
-            var canvas = doc.startPage(pageInfo).canvas
+            var page = doc.startPage(pageInfo)
+            var canvas = page.canvas
             var y = 0f
 
             val text = Paint().apply {
@@ -63,10 +64,11 @@ class PdfExporter(private val context: Context) {
             fun newPageIfNeeded(needed: Float) {
                 if (y + needed > pageH - 48f) {
                     footer()
-                    doc.finishPage(doc.getPage(pageIndex))
+                    doc.finishPage(page)
                     pageIndex++
                     pageInfo = PdfDocument.PageInfo.Builder(pageW, pageH, pageIndex).create()
-                    canvas = doc.startPage(pageInfo).canvas
+                    page = doc.startPage(pageInfo)
+                    canvas = page.canvas
                     y = margin + 10f
                 }
             }
@@ -198,7 +200,7 @@ class PdfExporter(private val context: Context) {
                 margin, y, Paint(small).apply { textSize = 9f },
             )
             footer()
-            doc.finishPage(doc.getPage(pageIndex))
+            doc.finishPage(page)
 
             context.contentResolver.openOutputStream(uri, "w").use { out ->
                 if (out == null) throw IOException("cannot open output")

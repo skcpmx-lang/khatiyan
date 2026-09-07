@@ -48,12 +48,8 @@ data class LedgerEntry(
     val subtitle: String,
     val note: String,
 ) {
-    val type: TxnType get() = TxnType.entries.firstOrNull { it.key == typeKey } ?: TxnType.OTHER2
+    val type: TxnType get() = TxnType.entries.firstOrNull { it.key == typeKey } ?: TxnType.EXPENSE
 }
-
-// Fallback for unknown type keys (should never happen with our fixed vocabulary).
-private val TxnType.OTHER2: TxnType
-    get() = TxnType.EXPENSE
 
 /** Everything the flagship dashboard renders, computed from DB + engines. */
 data class DashboardSnapshot(

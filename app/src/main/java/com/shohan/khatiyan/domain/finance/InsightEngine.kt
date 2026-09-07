@@ -92,7 +92,7 @@ object InsightEngine {
             } else {
                 out += Insight(
                     id = "net-zero",
-                    text = "এই মাসে আয় ও ব্যয় সমান — নেট ক্যাশ ফ্লো $sym০।",
+                    text = "এই মাসে আয় ও ব্যয় সমান — নেট ক্যাশ ফ্লো ${sym}০।",
                     tone = InsightTone.INFO,
                 )
             }

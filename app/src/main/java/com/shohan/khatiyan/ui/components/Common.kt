@@ -1,6 +1,7 @@
 package com.shohan.khatiyan.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.automirrored.outlined.Search
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -465,7 +466,7 @@ fun KhatiyanScaffold(
 @Composable
 fun SearchIconButton(onClick: () -> Unit) {
     IconButton(onClick = onClick) {
-        Icon(Icons.Outlined.Search, contentDescription = "সব জায়গায় খুঁজুন")
+        Icon(Icons.AutoMirrored.Outlined.Search, contentDescription = "সব জায়গায় খুঁজুন")
     }
 }
 
@@ -545,7 +546,7 @@ fun CheckRow(label: String, checked: Boolean, onToggle: () -> Unit, modifier: Mo
                     if (checked) {
                         Modifier
                     } else {
-                        androidx.compose.foundation.border(
+                        Modifier.border(
                             1.5.dp,
                             MaterialTheme.colorScheme.outline,
                             RoundedCornerShape(6.dp),
