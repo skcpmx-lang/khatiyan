@@ -81,19 +81,3 @@ jobs:
           path: apk-sha256.txt
           retention-days: 30
 
-      - name: Publish failure digest as issue
-        if: failure()
-        permissions:
-          issues: write
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          {
-            echo "CI run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-            echo '```'
-            grep -E "^(e: |.*FAILURE:|.*> Task .*FAILED|.*error:|Caused by|What went wrong)" -A 4 /tmp/gradle.log | tail -180
-            echo '```'
-          } > /tmp/fail.md
-          if [ -s /tmp/fail.md ]; then
-            gh issue create --title "CI failure on ${GITHUB_REF_NAME} @ ${GITHUB_SHA::7}" --body-file /tmp/fail.md --label ci-failure || true
-          fi
