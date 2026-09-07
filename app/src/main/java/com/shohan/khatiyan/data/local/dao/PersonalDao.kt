@@ -86,6 +86,7 @@ abstract class PersonalDao {
         SELECT r.* FROM personal_repayments r
         JOIN personal_debts d ON d.id = r.debtId
         ORDER BY r.dateIso DESC, r.id DESC
+        LIMIT :limit
         """
     )
     abstract suspend fun getAllRepaymentsRecent(limit: Int): List<PersonalRepaymentEntity>

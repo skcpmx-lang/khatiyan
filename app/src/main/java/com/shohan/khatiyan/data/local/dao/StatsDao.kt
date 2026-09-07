@@ -122,7 +122,7 @@ abstract class StatsDao {
     @Query(
         """
         SELECT ym, IFNULL(SUM(amount), 0) AS totalPaisa FROM (
-            SELECT substr(dateIso, 1, 7) AS ym, amountPaisa AS amount FROM shop_credits
+            SELECT substr(dateIso, 1, 7) AS ym, totalPaisa AS amount FROM shop_credits
             WHERE dateIso >= :fromIso AND dateIso <= :toIso
             UNION ALL
             SELECT substr(borrowedIso, 1, 7), amountPaisa FROM personal_debts
