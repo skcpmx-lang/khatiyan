@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  খতিয়ান launcher glyph: an open ledger with two pages, record lines and a
+  golden "settled" tick — organised money, clarity, trust. Drawn for the
+  108x108 adaptive-icon canvas with the artwork inside the central 66dp safe zone.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- left page -->
+    <path
+        android:fillColor="#FDFBF6"
+        android:pathData="M31,37 L52,37 L52,72 L31,72 A3,3 0 0 1 28,69 L28,40 A3,3 0 0 1 31,37 Z" />
+    <!-- right page -->
+    <path
+        android:fillColor="#F4EFE3"
+        android:pathData="M56,37 L77,37 A3,3 0 0 1 80,40 L80,69 A3,3 0 0 1 77,72 L56,72 Z" />
+    <!-- spine -->
+    <path
+        android:fillColor="#D9A62E"
+        android:pathData="M52,36 L56,36 L56,73 L52,73 Z" />
+    <!-- record lines, left page -->
+    <path android:fillColor="#0B5C43" android:fillAlpha="0.35" android:pathData="M33,44 L48,44 L48,46 L33,46 Z" />
+    <path android:fillColor="#0B5C43" android:fillAlpha="0.35" android:pathData="M33,50 L44,50 L44,52 L33,52 Z" />
+    <path android:fillColor="#0B5C43" android:fillAlpha="0.35" android:pathData="M33,56 L48,56 L48,58 L33,58 Z" />
+    <!-- golden tick over the right page -->
+    <path
+        android:strokeColor="#D9A62E"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M60,55 L65,60 L75,47" />
+    <!-- coin dot bottom-right of right page -->
+    <path
+        android:fillColor="#D9A62E"
+        android:pathData="M70,66 m-3.2,0 a3.2,3.2 0 1,0 6.4,0 a3.2,3.2 0 1,0 -6.4,0" />
+</vector>

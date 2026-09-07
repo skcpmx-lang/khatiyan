@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- খতিয়ান — সব হিসাব, এক জায়গায়। -->
+    <string name="app_name">খতিয়ান</string>
+    <string name="app_tagline">সব হিসাব, এক জায়গায়।</string>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light mode only, always. No -night variants exist on purpose (Phase 5). -->
+    <style name="Theme.Khatiyan" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/paper</item>
+        <item name="android:navigationBarColor">@color/paper</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowBackground">@color/paper</item>
+    </style>
+
+    <style name="Theme.Khatiyan.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/brand_deep</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenAnimationDuration">350</item>
+        <item name="postSplashScreenTheme">@style/Theme.Khatiyan</item>
+    </style>
+</resources>
