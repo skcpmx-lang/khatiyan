@@ -11,7 +11,7 @@ import com.shohan.khatiyan.di.AppContainer
  * One small factory helper so every ViewModel gets the [AppContainer] without
  * a DI framework: `viewModel(factory = containerFactory { ShopViewModel(it) })`.
  */
-fun <VM : ViewModel> containerFactory(create: (AppContainer) -> VM): ViewModelProvider.Factory =
+inline fun <reified VM : ViewModel> containerFactory(crossinline create: (AppContainer) -> VM): ViewModelProvider.Factory =
     viewModelFactory {
         initializer {
             val app = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as KhatiyanApp

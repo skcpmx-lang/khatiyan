@@ -219,7 +219,7 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
 
     fun wipeAllData(onDone: () -> Unit) {
         viewModelScope.launch {
-            container.db.clearAllData()
+            container.db.clearAllTables()
             onDone()
             _events.emit("সব তথ্য মুছে ফেলা হয়েছে — অ্যাপ একবার বন্ধ করে চালু করুন।")
         }
