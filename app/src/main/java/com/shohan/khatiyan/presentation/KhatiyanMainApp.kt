@@ -140,7 +140,7 @@ fun KhatiyanNavHost(navController: NavHostController, container: AppContainer) {
             }
 
             composable(Routes.SHOPS) {
-                com.shohan.khatiyan.presentation.shop.ShopsScreen(navController, container)
+                com.shohan.khatiyan.presentation.shop.ShopsTabScaffold(navController, container)
             }
             composable(
                 Routes.SHOP_EDIT,
@@ -170,7 +170,7 @@ fun KhatiyanNavHost(navController: NavHostController, container: AppContainer) {
             }
 
             composable(Routes.LOANS) {
-                com.shohan.khatiyan.presentation.loan.LoansScreen(navController, container)
+                com.shohan.khatiyan.presentation.loan.LoansTabScaffold(navController, container)
             }
             composable(
                 Routes.LOAN_EDIT,
@@ -186,7 +186,7 @@ fun KhatiyanNavHost(navController: NavHostController, container: AppContainer) {
             }
 
             composable(Routes.EMIS) {
-                com.shohan.khatiyan.presentation.emi.EmisScreen(navController, container)
+                com.shohan.khatiyan.presentation.emi.EmisTabScaffold(navController, container)
             }
             composable(
                 Routes.EMI_EDIT,
@@ -202,7 +202,7 @@ fun KhatiyanNavHost(navController: NavHostController, container: AppContainer) {
             }
 
             composable(Routes.PEOPLE) {
-                com.shohan.khatiyan.presentation.personal.PeopleScreen(navController, container)
+                com.shohan.khatiyan.presentation.personal.PeopleTabScaffold(navController, container)
             }
             composable(
                 Routes.PERSON_EDIT,
