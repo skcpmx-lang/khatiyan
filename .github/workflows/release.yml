@@ -67,13 +67,25 @@ jobs:
           cp app/build/outputs/apk/release/app-release*.apk out/khatiyan-release-${GITHUB_REF_NAME}.apk
           (cd out && sha256sum *.apk > SHA256SUMS.txt)
           cat out/SHA256SUMS.txt
+          {
+            echo "## Khatiyan $GITHUB_REF_NAME"
+            echo
+            echo "Offline-first Bengali money ledger: shop credit, loans, EMI, personal debt, hisab."
+            echo "No INTERNET permission, no ads, no analytics. Debug-signed release unless a keystore secret is configured (see RELEASE.md)."
+            echo
+            echo "### Checksums"
+            echo '```'
+            cat out/SHA256SUMS.txt
+            echo '```'
+          } > out/release-notes.md
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$GITHUB_REF_NAME" \
-            --generate-notes \
+            --title "Khatiyan $GITHUB_REF_NAME" \
+            --notes-file out/release-notes.md \
             out/khatiyan-debug-${GITHUB_REF_NAME}.apk \
             out/khatiyan-release-${GITHUB_REF_NAME}.apk \
             out/SHA256SUMS.txt
