@@ -48,6 +48,18 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+      - name: Android Lint (app:lintDebug)
+        run: ./gradlew :app:lintDebug --stacktrace 2>&1 | tee /tmp/lint.log
+        continue-on-error: false
+
+      - name: Upload lint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-report
+          path: app/build/reports/lint-results-debug.*
+          retention-days: 14
+
       - name: Assemble debug + release APKs
         run: |
           set -o pipefail
