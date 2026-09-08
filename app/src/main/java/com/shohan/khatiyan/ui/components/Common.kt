@@ -442,8 +442,7 @@ fun KhatiyanScaffold(
         contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             TopAppBar(
-                title = { Text(title, style = MaterialTheme.typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                titlePadding = androidx.compose.foundation.layout.PaddingValues(start = 20.dp, end = 8.dp),
+                title = { Text(title, modifier = Modifier.padding(start = 4.dp), style = MaterialTheme.typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                 navigationIcon = {
                     if (onBack != null) {
                         IconButton(onClick = onBack) {
