@@ -382,7 +382,7 @@ private fun GreetingRow(name: String) {
     }
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f)) {
