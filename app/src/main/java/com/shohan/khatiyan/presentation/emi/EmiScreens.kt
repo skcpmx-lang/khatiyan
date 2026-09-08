@@ -292,12 +292,12 @@ class EmiEditViewModel(private val container: AppContainer, private val emiId: L
                 return@launch
             }
             if (price == null) {
-                _state.value = f.copy(error = "পণ্যের মোট মূল্য লিখুন।")
+                _state.value = f.copy(error = "পণ্যের মোট দাম লিখুন।")
                 return@launch
             }
             val down = Money.parseAllowZero(f.downPayment) ?: 0L
             if (down > price) {
-                _state.value = f.copy(error = "অগ্রিম পরিশোধ মোট মূল্যের চেয়ে বেশি হতে পারবে না।")
+                _state.value = f.copy(error = "অগ্রিম পরিশোধ মোট দামের চেয়ে বেশি হতে পারবে না।")
                 return@launch
             }
             val draft = EmiRepository.EmiDraft(

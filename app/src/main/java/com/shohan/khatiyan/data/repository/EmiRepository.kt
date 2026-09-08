@@ -83,10 +83,10 @@ class EmiRepository(private val db: KhatiyanDatabase) {
 
     suspend fun save(draft: EmiDraft) {
         if (draft.productName.isBlank()) throw FinanceValidationException("পণ্যের নাম লিখুন।")
-        if (draft.totalPricePaisa <= 0L) throw FinanceValidationException("পণ্যের মোট মূল্য লিখুন।")
+        if (draft.totalPricePaisa <= 0L) throw FinanceValidationException("পণ্যের মোট দাম লিখুন।")
         val totalPayable = if (draft.totalPayablePaisa > 0) draft.totalPayablePaisa else draft.totalPricePaisa
         val financed = totalPayable - draft.downPaymentPaisa
-        if (financed < 0) throw FinanceValidationException("অগ্রিম পরিশোধ মোট মূল্যের চেয়ে বেশি হতে পারবে না।")
+        if (financed < 0) throw FinanceValidationException("অগ্রিম পরিশোধ মোট দামের চেয়ে বেশি হতে পারবে না।")
         val schedule = buildSchedule(draft)
         val base = schedule.firstOrNull()?.amountPaisa ?: 0L
         val entity = EmiPurchaseEntity(
