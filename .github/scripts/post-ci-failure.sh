@@ -22,5 +22,6 @@ BODY=/tmp/ci-failure-body.md
   tail -50 "$LOG" 2>/dev/null
 } > "$BODY"
 
-gh api repos/:owner/:repo/labels -f name=ci-failure -f color=E11C48 -d '{"description":"GitHub Actions failure digest"}' >/dev/null 2>&1 || true
-gh issue create --title "CI DIGEST @ ${SHA:0:7}" --body-file "$BODY" --label ci-failure
+gh label create ci-failure --color E11C48 --description "GitHub Actions failure digest" >/dev/null 2>&1 || true
+gh issue create --title "CI DIGEST @ ${SHA:0:7}" --body-file "$BODY" --label ci-failure \
+  || gh issue create --title "CI DIGEST @ ${SHA:0:7}" --body-file "$BODY"
