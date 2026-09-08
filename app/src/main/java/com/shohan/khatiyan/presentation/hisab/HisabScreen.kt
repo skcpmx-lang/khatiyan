@@ -88,26 +88,38 @@ fun HisabScreen(navController: NavController, container: AppContainer) {
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
-            ) { Icon(Icons.Outlined.Add, "নতুন এন্ট্রি") }
+            ) { Icon(Icons.Outlined.Add, "নতুন হিসাব") }
         },
     ) { padding ->
         Column(modifier = Modifier.padding(padding).fillMaxWidth()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
                     .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
                     .padding(horizontal = 12.dp, vertical = 10.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
+                Column(Modifier.weight(1.1f)) {
+                    Text("মোট বাকি", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        Money.format(totals.values.sumOf { it.coerceAtLeast(0L) }),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = if (totals.values.any { it > 0L }) KhatiyanBrand.Danger else KhatiyanBrand.Success,
+                        maxLines = 1,
+                    )
+                }
                 ObligationKind.entries.forEach { kind ->
                     Column(Modifier.weight(1f)) {
                         Text(
                             when (kind) {
                                 ObligationKind.SHOP -> "দোকান"
-                                ObligationKind.LOAN -> "ঋণ"
+                                ObligationKind.LOAN -> "লোন"
                                 ObligationKind.EMI -> "EMI"
-                                ObligationKind.PERSONAL -> "মানুষ"
+                                ObligationKind.PERSONAL -> "ধার"
                             },
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -128,9 +140,9 @@ fun HisabScreen(navController: NavController, container: AppContainer) {
                 contentColor = MaterialTheme.colorScheme.primary,
             ) {
                 Tab(selected = tab == 0, onClick = { tab = 0 }, text = { Text("দোকান") })
-                Tab(selected = tab == 1, onClick = { tab = 1 }, text = { Text("ঋণ") })
+                Tab(selected = tab == 1, onClick = { tab = 1 }, text = { Text("লোন") })
                 Tab(selected = tab == 2, onClick = { tab = 2 }, text = { Text("EMI") })
-                Tab(selected = tab == 3, onClick = { tab = 3 }, text = { Text("মানুষ") })
+                Tab(selected = tab == 3, onClick = { tab = 3 }, text = { Text("ধার") })
             }
             when (tab) {
                 0 -> com.shohan.khatiyan.presentation.shop.ShopListContent(navController, container, withBack = false)
@@ -138,8 +150,6 @@ fun HisabScreen(navController: NavController, container: AppContainer) {
                 2 -> com.shohan.khatiyan.presentation.emi.EmiListContent(navController, container)
                 else -> com.shohan.khatiyan.presentation.personal.PeopleListContent(navController, container)
             }
-            Spacer(Modifier.height(8.dp))
-            Box(Modifier.fillMaxWidth().height(0.dp))
         }
     }
 }

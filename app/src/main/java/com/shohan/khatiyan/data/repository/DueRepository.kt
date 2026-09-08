@@ -71,7 +71,7 @@ class DueRepository(private val db: KhatiyanDatabase) {
         val personalDues = personalDao.getOpenDebts().map { d ->
             DueEngine.PersonalDue(
                 debtId = d.id,
-                personName = personNames[d.personId] ?: "ব্যক্তি",
+                personName = personNames[d.personId] ?: "ধার",
                 dueDate = BnDates.fromIso(d.expectedReturnIso),
                 outstandingPaisa = d.amountPaisa,
             )

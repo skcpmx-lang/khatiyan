@@ -100,3 +100,10 @@ belongs to the household and never leaves it.
 ## License
 
 MIT — see [LICENSE](LICENSE). Free to use, study, modify and redistribute.
+
+## Version history
+
+| Version | What changed |
+|---|---|
+| **1.0.1** | App-wide UI/UX refinement pass and full natural-Bengali copy rewrite (no logic changes): 6-tile quick actions grid, unified 20dp content gutters and spacing rhythm, safe-area handling for onboarding/lock, refined hero card with a calm zero state, report charts that hide themselves when there is no data, adaptive search placeholders, consistent icon family, and calmer destructive/restore wording. Module names finalized: হিসাব → দোকান / লোন / EMI / ধার. |
+| 1.0.0 | First release — full offline ledger (shop credit, loans, EMI, personal debt, hisab), dashboard, reports, backup/restore, reminders, app lock. |

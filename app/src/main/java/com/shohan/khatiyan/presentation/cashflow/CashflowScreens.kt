@@ -171,7 +171,7 @@ fun CashflowScreen(navController: NavController, container: AppContainer) {
             ) {
                 Icon(
                     if (state.tab == 1) Icons.Outlined.TrendingDown else Icons.Outlined.Add,
-                    if (state.tab == 1) "নতুন ব্যয়" else "নতুন এন্ট্রি",
+                    if (state.tab == 1) "নতুন ব্যয়" else "নতুন আয়",
                 )
             }
         },
@@ -206,7 +206,7 @@ fun CashflowScreen(navController: NavController, container: AppContainer) {
             TextField(
                 value = state.query,
                 onValueChange = { v -> vm.update { it.copy(query = v) } },
-                placeholder = { Text(if (state.tab == 2) "সব লেনদেনে খুঁজুন…" else "উৎস/নোট খুঁজুন…") },
+                placeholder = { Text(if (state.tab == 2) "সব লেনদেনে খুঁজুন…" else "উৎস বা নোট খুঁজুন…") },
                 singleLine = true,
                 shape = MaterialTheme.shapes.medium,
                 colors = TextFieldDefaults.colors(
@@ -215,12 +215,12 @@ fun CashflowScreen(navController: NavController, container: AppContainer) {
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                 ),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                 leadingIcon = { Icon(com.shohan.khatiyan.ui.icons.KhatiyanIcons.Search, null) },
             )
 
             Spacer(Modifier.height(4.dp))
-            Column(Modifier.padding(horizontal = 16.dp)) {
+            Column(Modifier.padding(horizontal = 20.dp)) {
                 Text("সময়কাল", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 ChoiceChipsRow(
                     options = CashflowFilters.RANGES,
@@ -277,8 +277,8 @@ fun CashflowScreen(navController: NavController, container: AppContainer) {
                         if (state.incomes.isEmpty()) {
                             item {
                                 EmptyState(
-                                    "এই সময়ে কোনো আয় নেই",
-                                    "উপরের ‘+ আয়’ থেকে বেতন, ব্যবসা বা যেকোনো আয়ের এন্ট্রি যোগ করুন।",
+                                    "এই সময়ের মধ্যে কোনো আয় নেই",
+                                    "উপরের + থেকে বেতন, ব্যবসা বা যেকোনো আয় যোগ করুন।",
                                 )
                             }
                         }
@@ -297,7 +297,7 @@ fun CashflowScreen(navController: NavController, container: AppContainer) {
                         if (state.expenses.isEmpty()) {
                             item {
                                 EmptyState(
-                                    "এই সময়ে কোনো ব্যয় নেই",
+                                    "এই সময়ের মধ্যে কোনো ব্যয় নেই",
                                     "বাজার, যাতায়াত, বিল — প্রতিদিনের খরচ এখানে লিখে রাখুন।",
                                 )
                             }
@@ -315,7 +315,7 @@ fun CashflowScreen(navController: NavController, container: AppContainer) {
                     }
                     else -> {
                         if (state.entries.isEmpty()) {
-                            item { EmptyState("কোনো লেনদেন নেই", "এই সময়ে ও ধরনে কোনো এন্ট্রি পাওয়া যায়নি।") }
+                            item { EmptyState("কোনো লেনদেন নেই", "এই সময়ের মধ্যে এই ধরনের কোনো লেনদেন নেই।") }
                         }
                         items(state.entries, key = { it.key }) { entry ->
                             AllLedgerCard(entry)
@@ -517,7 +517,7 @@ class CashEntryEditViewModel(
                 }
             }
             if (result.isFailure) {
-                _state.value = _state.value.copy(error = "সংরক্ষণ করা যায়নি — আবার চেষ্টা করুন।")
+                _state.value = _state.value.copy(error = "সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।")
                 return@launch
             }
             onSaved()
@@ -564,7 +564,7 @@ private fun CashEntryEditor(
             modifier = Modifier
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AppCard {
@@ -606,7 +606,7 @@ private fun CashEntryEditor(
                 )
             }
             com.shohan.khatiyan.ui.components.PrimaryButton(
-                "সংরক্ষণ করুন",
+                "সংরক্ষণ",
                 onClick = { vm.save { navController.popBackStack() } },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = f.loaded,
@@ -615,11 +615,11 @@ private fun CashEntryEditor(
                 androidx.compose.material3.TextButton(
                     onClick = { showDelete = true },
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text("এই এন্ট্রি মুছে ফেলুন", color = MaterialTheme.colorScheme.error) }
+                ) { Text("এই হিসাবটি মুছে ফেলুন", color = MaterialTheme.colorScheme.error) }
                 if (showDelete) {
                     ConfirmDialogLocal(
                         title = "মুছে ফেলবেন?",
-                        message = "${BnDates.formatShort(BnDates.fromIso(f.dateIso) ?: BnDates.today())} — ${Money.format(Money.parse(f.amount) ?: 0)} ${"এন্ট্রিটি মুছে যাবে।"}",
+                        message = "${BnDates.formatShort(BnDates.fromIso(f.dateIso) ?: BnDates.today())} — ${Money.format(Money.parse(f.amount) ?: 0)} ${"হিসাবটি মুছে যাবে।"}",
                         onConfirm = { showDelete = false; vm.delete { navController.popBackStack() } },
                         onDismiss = { showDelete = false },
                     )

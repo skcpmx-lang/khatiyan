@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -66,18 +67,19 @@ fun OnboardingScreen(container: AppContainer) {
     var currency by remember { mutableStateOf("৳") }
     var error by remember { mutableStateOf<String?>(null) }
 
-    val currencies = remember { listOf("৳" to "বাংলাদেশি টাকা", "₹" to "Indian Rupee", "$" to "Dollar", "£" to "Pound") }
+    val currencies = remember { listOf("৳" to "বাংলাদেশি টাকা", "₹" to "ভারতীয় টাকা", "$" to "ডলার", "£" to "পাউন্ড") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 24.dp),
+            .systemBarsPadding()
+            .padding(horizontal = 24.dp, vertical = 8.dp),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 18.dp, bottom = 6.dp),
+                .padding(top = 10.dp, bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -113,8 +115,8 @@ fun OnboardingScreen(container: AppContainer) {
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(top = 24.dp),
-                verticalArrangement = Arrangement.Top,
+                    .padding(top = 16.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.Center,
             ) {
                 when (page) {
                     0 -> WelcomePage()
@@ -159,7 +161,7 @@ fun OnboardingScreen(container: AppContainer) {
                     scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
                 } else {
                     if (userName.isBlank()) {
-                        error = "নাম লিখুন — বা পরেও দেওয়া যাবে।"
+                        error = "নাম লিখুন — পরেও দিতে পারবেন।"
                     }
                     val name = userName.trim()
                     if (name.isEmpty() || name.length > 60) {
@@ -253,7 +255,7 @@ private fun ModulesPage() {
 @Composable
 private fun PrivacyPage() {
     Column {
-        Text("গোপনীয়তা আগেই ঠিক করা", style = MaterialTheme.typography.headlineSmall)
+        Text("আপনার তথ্য, আপনার কাছেই", style = MaterialTheme.typography.headlineSmall)
         Spacer(Modifier.height(14.dp))
         Icon(
             Icons.Outlined.PrivacyTip,
@@ -292,16 +294,16 @@ private fun SetupPage(
         KhatiyanTextField(
             value = name,
             onValueChange = onName,
-            label = "নাম (ড্যাশবোর্ড ও রিপোর্টে দেখাবে)",
+            label = "ড্যাশবোর্ড ও রিপোর্টে আপনার নাম দেখাবে",
             error = error,
         )
         Spacer(Modifier.height(18.dp))
-        Text("টাকার একক", style = MaterialTheme.typography.titleMedium)
+        Text("মুদ্রা", style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(6.dp))
         CurrencyPicker(selected = currency, onSelect = onCurrency)
         Spacer(Modifier.height(8.dp))
         Text(
-            "ডিফল্ট: বাংলাদেশি টাকা (৳)",
+            "বাংলাদেশি টাকা (৳) ডিফল্ট রাখা আছে",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Start,

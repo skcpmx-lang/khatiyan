@@ -169,7 +169,7 @@ class CreditEditViewModel(
             val failure = result.exceptionOrNull()
             if (failure != null) {
                 val msg = if (failure is com.shohan.khatiyan.utilities.FinanceValidationException) failure.messageBn
-                else "সংরক্ষণ করা যায়নি — ইনপুট দেখে আবার চেষ্টা করুন।"
+                else "সংরক্ষণ করা যায়নি। লেখাগুলো মিলিয়ে আবার চেষ্টা করুন।"
                 _state.value = _state.value.copy(error = msg)
                 return@launch
             }
@@ -185,18 +185,18 @@ fun CreditEditScreen(navController: NavController, container: AppContainer, shop
     val units = remember { listOf("", "কেজি", "গ্রাম", "লিটার", "পিস", "ডজন", "বোঝা", "বান্ডল") }
 
     KhatiyanScaffold(
-        title = if (creditId == null) "নতুন বাকি" else "বাকির এন্ট্রি সম্পাদনা",
+        title = if (creditId == null) "নতুন বাকি" else "বাকির হিসাব সম্পাদনা",
         onBack = { navController.popBackStack() },
     ) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AppCard {
-                Text("খরচের এন্ট্রি — ${state.shopName}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text("বাকি যোগ — ${state.shopName}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     DateField(
@@ -299,7 +299,7 @@ fun CreditEditScreen(navController: NavController, container: AppContainer, shop
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("এই এন্ট্রির মোট", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                    Text("সব মিলিয়ে", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
                     Text(
                         Money.format(vm.computedTotal()),
                         style = MaterialTheme.typography.headlineSmall,
@@ -314,7 +314,7 @@ fun CreditEditScreen(navController: NavController, container: AppContainer, shop
             }
 
             PrimaryButton(
-                text = "সংরক্ষণ করুন",
+                text = "সংরক্ষণ",
                 onClick = { vm.save { navController.popBackStack() } },
                 modifier = Modifier
                     .fillMaxWidth()

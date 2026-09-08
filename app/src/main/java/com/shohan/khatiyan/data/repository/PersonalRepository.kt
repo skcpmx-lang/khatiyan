@@ -75,7 +75,7 @@ class PersonalRepository(private val db: KhatiyanDatabase) {
         allowOverpayment: Boolean,
     ) {
         if (amountPaisa <= 0L) throw FinanceValidationException("টাকার পরিমাণ লিখুন।")
-        val debt = dao.getDebt(debtId) ?: throw FinanceValidationException("ধারের রেকর্ডটি পাওয়া যায়নি।")
+        val debt = dao.getDebt(debtId) ?: throw FinanceValidationException("ধারের হিসাবটি পাওয়া যায়নি।")
         val repaid = dao.getRepayments(debtId).fold(0L) { a, r -> Money.addClamped(a, r.amountPaisa) }
         val remaining = debt.amountPaisa - repaid
         if (amountPaisa > remaining && !allowOverpayment) {

@@ -91,7 +91,7 @@ class LoanRepository(private val db: KhatiyanDatabase) {
         if (draft.institution.isBlank() && draft.loanName.isBlank()) {
             throw FinanceValidationException("প্রতিষ্ঠানের নাম বা লোনের নাম লিখুন।")
         }
-        if (draft.principalPaisa <= 0L) throw FinanceValidationException("ঋণের মূল টাকার পরিমাণ লিখুন।")
+        if (draft.principalPaisa <= 0L) throw FinanceValidationException("লোনের মূল টাকার পরিমাণ লিখুন।")
         val totalPayable = if (draft.totalPayablePaisa > 0) {
             draft.totalPayablePaisa
         } else {
@@ -195,7 +195,7 @@ class LoanRepository(private val db: KhatiyanDatabase) {
         note: String,
         allowOverpayment: Boolean,
     ) {
-        val existing = dao.getPayment(paymentId) ?: throw FinanceValidationException("পরিশোধের রেকর্ডটি পাওয়া যায়নি।")
+        val existing = dao.getPayment(paymentId) ?: throw FinanceValidationException("পরিশোধটি খুঁজে পাওয়া যায়নি।")
         if (amountPaisa <= 0L) throw FinanceValidationException("টাকার পরিমাণ লিখুন।")
         val paidOthers = dao.getPaymentsRecent(loanId).filterNot { it.id == paymentId }.fold(0L) { a, p -> Money.addClamped(a, p.amountPaisa) }
         val loanEntity = dao.getLoan(loanId) ?: throw FinanceValidationException("লোনটি খুঁজে পাওয়া যায়নি।")

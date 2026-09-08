@@ -72,3 +72,7 @@ a strictly larger `versionCode`.
 ```bash
 sha256sum khatiyan-release-v1.0.0.apk      # must match SHA256SUMS.txt in the release
 ```
+
+### v1.0.1
+
+UI/UX + Bengali copy refinement on top of v1.0.0 — no schema or logic changes (versionCode 2). Release pipeline unchanged; debug-sign fallback applies unless `KHATIYAN_KEYSTORE_BASE64` is configured.

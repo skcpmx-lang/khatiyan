@@ -105,7 +105,7 @@ fun PaymentEntryDialog(
                 if (excess != null) {
                     Spacer(Modifier.height(10.dp))
                     WarningBanner(
-                        "বাকির তুলনায় ${Money.format(excess, symbol)} বেশি দেওয়া হচ্ছে। নিশ্চিত করলে অতিরিক্ত অংশ “অগ্রিম জমা” থাকবে — বকেয়া শূন্য দেখাবে, ঋণ নেগেটিভ হবে না।",
+                        "বাকির চেয়ে ${Money.format(excess, symbol)} বেশি দিচ্ছেন। রাজি থাকলে বাড়তি অংশ “অগ্রিম জমা” থাকবে — বকেয়া ০ দেখাবে।",
                     )
                 }
             }

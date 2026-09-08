@@ -77,12 +77,12 @@ class BackupManager(
     }
 
     fun parse(bytes: ByteArray): BackupFile {
-        if (bytes.size < 16) throw BackupFormatException("ফাইলটি পড়া যায়নি — খালি বা নষ্ট ফাইল।")
+        if (bytes.size < 16) throw BackupFormatException("ফাইলটি খালি বা নষ্ট — পড়া যায়নি।")
         val text = bytes.toString(Charsets.UTF_8).removePrefix("\uFEFF")
         val file = try {
             json.decodeFromString(BackupFile.serializer(), text)
         } catch (e: Exception) {
-            throw BackupFormatException("এটি বৈধ খতিয়ান ব্যাকআপ ফাইল নয় (JSON নষ্ট হয়ে গেছে)।")
+            throw BackupFormatException("ফাইলটি ঠিকভাবে পড়া যাচ্ছে না — নষ্ট হয়ে যেতে পারে।")
         }
         validate(file)
         return file
@@ -96,13 +96,13 @@ class BackupManager(
             file.backupVersion > BackupFile.CURRENT_VERSION
         ) {
             throw BackupFormatException(
-                "ব্যাকআপ সংস্করণ ${com.shohan.khatiyan.utilities.BnText.toBnDigits(file.backupVersion.toString())} এই অ্যাপে সাপোর্টেড নয়।",
+                "এই ব্যাকআপটি এই অ্যাপের সাথে খাপ খায় না — হয়তো নতুন সংস্করণের ফাইল।",
             )
         }
         if (file.shops.any { it.id <= 0 } || file.loans.any { it.id <= 0 } ||
             file.emiPurchases.any { it.id <= 0 } || file.persons.any { it.id <= 0 }
         ) {
-            throw BackupFormatException("ব্যাকআপে অবৈধ রেকর্ড আইডি পাওয়া গেছে — ফাইলটি নষ্ট হতে পারে।")
+            throw BackupFormatException("ফাইলটিতে কিছু হিসাবের নম্বর মিলছে না — ব্যাকআপটি নষ্ট হতে পারে।")
         }
         val shopIds = file.shops.map { it.id }.toSet()
         val loanIds = file.loans.map { it.id }.toSet()
@@ -115,14 +115,14 @@ class BackupManager(
             file.emiPayments.any { it.emiId !in emiIds } ||
             file.personalDebts.any { it.personId !in personIds }
         ) {
-            throw BackupFormatException("ব্যাকআপ ফাইলে কিছু রেকর্ডের মূল এন্ট্রি নেই — ফাইলটি অসম্পূর্ণ।")
+            throw BackupFormatException("ফাইলটি অসম্পূর্ণ — কিছু হিসাবের মূল তথ্য পাওয়া যায়নি।")
         }
         val creditIds = file.shopCredits.map { it.id }.toSet()
         if (file.shopCreditItems.any { it.creditId !in creditIds }) {
-            throw BackupFormatException("ব্যাকআপ ফাইলে পণ্যের এন্ট্রি তার মূল বাকির সাথে মেলেনি।")
+            throw BackupFormatException("কিছু পণ্যের হিসাব তার মূল বাকির সাথে মেলেনি।")
         }
         if (file.shops.any { it.name.isBlank() }) {
-            throw BackupFormatException("দোকানের নাম ছাড়া রেকর্ড পাওয়া গেছে — ফাইলটি ঠিক নয়।")
+            throw BackupFormatException("নাম ছাড়া কিছু দোকানের হিসাব পাওয়া গেছে — ফাইলটি ঠিক মনে হচ্ছে না।")
         }
     }
 

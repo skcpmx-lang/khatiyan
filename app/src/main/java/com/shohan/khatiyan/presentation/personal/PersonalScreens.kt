@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Download
@@ -116,7 +115,7 @@ fun PeopleTabScaffold(navController: NavController, container: AppContainer) {
                 onClick = { navController.navigate(Routes.personEdit()) },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
-            ) { Icon(Icons.Outlined.Add, "নতুন মানুষ") }
+            ) { Icon(Icons.Outlined.Add, "নতুন ব্যক্তি যোগ") }
         },
     ) { padding ->
         Box(Modifier.padding(padding)) {
@@ -145,19 +144,19 @@ fun PeopleListContent(navController: NavController, container: AppContainer, mod
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 6.dp),
-            leadingIcon = { Icon(Icons.AutoMirrored.Outlined.Login, null) },
+                .padding(horizontal = 20.dp, vertical = 8.dp),
+            leadingIcon = { Icon(com.shohan.khatiyan.ui.icons.KhatiyanIcons.Search, null) },
         )
         if (state.rows.isEmpty()) {
             EmptyState(
                 title = if (state.query.isNotBlank()) "এই নামে কাউকে পাওয়া যায়নি" else "তালিকা এখন খালি",
-                subtitle = "বন্ধু, আত্মীয় বা পরিচয়ের কারো কাছ থেকে নেওয়া টাকা এখানে লিপিবদ্ধ রাখুন।",
-                actionLabel = if (state.query.isBlank()) "+ নতুন মানুষ" else null,
+                subtitle = "বন্ধু, আত্মীয় বা পরিচিত সবার ধার-দেনার হিসাব এখানে রাখুন।",
+                actionLabel = if (state.query.isBlank()) "নতুন ব্যক্তি যোগ করুন" else null,
                 onAction = { navController.navigate(Routes.personEdit()) },
             )
         } else {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 state.rows.forEach { row ->
@@ -271,7 +270,7 @@ class PersonEditViewModel(private val container: AppContainer, private val perso
                 )
             }
             if (result.isFailure) {
-                _state.value = _state.value.copy(error = "সংরক্ষণ করা যায়নি — আবার চেষ্টা করুন।")
+                _state.value = _state.value.copy(error = "সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।")
                 return@launch
             }
             onSaved()
@@ -302,14 +301,14 @@ fun PersonEditScreen(navController: NavController, container: AppContainer, pers
     var showDelete by remember { mutableStateOf(false) }
 
     KhatiyanScaffold(
-        title = if (personId == null) "নতুন মানুষ" else "সম্পাদনা",
+        title = if (personId == null) "নতুন ব্যক্তি" else "সম্পাদনা",
         onBack = { navController.popBackStack() },
     ) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AppCard {
@@ -334,7 +333,7 @@ fun PersonEditScreen(navController: NavController, container: AppContainer, pers
                 KhatiyanTextField(f.note, { v -> vm.update { it.copy(note = v) } }, "নোট (ঐচ্ছিক)", singleLine = false, minLines = 2)
             }
             PrimaryButton(
-                "সংরক্ষণ করুন",
+                "সংরক্ষণ",
                 onClick = { vm.save { navController.popBackStack() } },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = f.loaded,
@@ -346,12 +345,12 @@ fun PersonEditScreen(navController: NavController, container: AppContainer, pers
                     modifier = Modifier.fillMaxWidth(),
                 )
                 TextButton(onClick = { showDelete = true }, modifier = Modifier.fillMaxWidth()) {
-                    Text("এই মানুষ ও তার সব ধারের রেকর্ড মুছুন", color = MaterialTheme.colorScheme.error)
+                    Text("নামটি ও তার সব ধারের হিসাব মুছে ফেলুন", color = MaterialTheme.colorScheme.error)
                 }
                 if (showDelete) {
                     ConfirmDialog(
                         title = "সব মুছে ফেলবেন?",
-                        message = "“${f.name}”-এর সব ধার ও পরিশোধের রেকর্ড মুছে যাবে। এটি ফেরানো যাবে না (ব্যাকআপ থাকলে বাদে)।",
+                        message = "“${f.name}”-এর সব ধার আর পরিশোধের হিসাব মুছে যাবে। এই কাজটি ফিরিয়ে নেওয়া যাবে না; ব্যাকআপ থাকলে সেখান থেকে ফেরানো যাবে।",
                         confirmLabel = "হ্যাঁ, মুছে দিন",
                         danger = true,
                         onConfirm = { showDelete = false; vm.delete { navController.popBackStack() } },
@@ -384,13 +383,13 @@ class PersonDetailViewModel(private val container: AppContainer, private val per
 
     suspend fun saveDebt(debt: PersonalDebtEntity) {
         container.personalRepo.saveDebt(debt)
-        events.emit(if (debt.id == 0L) "নতুন ধার যোগ হয়েছে" else "ধারের রেকর্ড হালনাগাদ হয়েছে")
+        events.emit(if (debt.id == 0L) "নতুন ধার যোগ হয়েছে" else "ধারের হিসাব আপডেট হয়েছে")
     }
 
     fun deleteDebt(debtId: Long) {
         viewModelScope.launch {
             container.personalRepo.deleteDebt(debtId)
-            events.emit("ধারের রেকর্ড মুছে ফেলা হয়েছে")
+            events.emit("ধারের হিসাব মুছে গেছে")
         }
     }
 
@@ -453,7 +452,7 @@ fun PersonDetailScreen(navController: NavController, container: AppContainer, pe
             modifier = Modifier
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AppCard {
@@ -480,7 +479,7 @@ fun PersonDetailScreen(navController: NavController, container: AppContainer, pe
             SectionTitle("ধারের খাতা")
             if (d.debts.isEmpty()) {
                 AppCard {
-                    Text("এখনও কোনো ধারের এন্ট্রি নেই। নিচের + থেকে যোগ করুন।", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text("এখনো কোনো ধারের হিসাব নেই।\nনিচের + থেকে প্রথম ধার লিখে রাখুন।", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             } else {
                 d.debts.forEach { debt ->
@@ -507,7 +506,7 @@ fun PersonDetailScreen(navController: NavController, container: AppContainer, pe
     }
     debtDialog?.let { existing ->
         DebtEditDialog(
-            title = "ধারের এন্ট্রি সম্পাদনা",
+            title = "ধারের হিসাব সম্পাদনা",
             personId = personId,
             initial = existing,
             onDismiss = { debtDialog = null },
@@ -525,8 +524,8 @@ fun PersonDetailScreen(navController: NavController, container: AppContainer, pe
     }
     deleteDebt?.let { debt ->
         ConfirmDialog(
-            title = "ধারের এন্ট্রি মুছে ফেলবেন?",
-            message = "${BnDates.formatShort(BnDates.fromIso(debt.borrowedIso) ?: BnDates.today())} এর ${Money.format(debt.amountPaisa)} টাকার এন্ট্রি ও তার পরিশোধের রেকর্ড মুছে যাবে।",
+            title = "ধারের হিসাবটি মুছে ফেলবেন?",
+            message = "${BnDates.formatShort(BnDates.fromIso(debt.borrowedIso) ?: BnDates.today())} এর ${Money.format(debt.amountPaisa)} টাকার ধার আর তার পরিশোধের হিসাব মুছে যাবে।",
             confirmLabel = "মুছে দিন",
             danger = true,
             onConfirm = { vm.deleteDebt(debt.id); deleteDebt = null },

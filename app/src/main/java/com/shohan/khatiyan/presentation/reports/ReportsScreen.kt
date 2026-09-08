@@ -114,7 +114,7 @@ fun ReportsScreen(navController: NavController, container: AppContainer) {
                 val ok = runCatching {
                     CsvExporter.writeTo(context, uri, CsvExporter.transactionsCsv(container.db, snap.fromIso, snap.toIso))
                 }.isSuccess
-                snackbar.showSnackbar(if (ok) "CSV রপ্তানি সম্পন্ন" else "CSV রপ্তানি ব্যর্থ")
+                snackbar.showSnackbar(if (ok) "CSV ফাইল তৈরি হয়েছে" else "CSV ফাইল তৈরি করা যায়নি")
             }
         }
     }
@@ -135,18 +135,18 @@ fun ReportsScreen(navController: NavController, container: AppContainer) {
         snackbarHostState = snackbar,
         actions = {
             IconButton(onClick = {
-                if (snap == null) { scope.launch { snackbar.showSnackbar("রিপোর্ট লোড হচ্ছে…") } } else {
+                if (snap == null) { scope.launch { snackbar.showSnackbar("রিপোর্ট এখনো তৈরি হচ্ছে — একটু পরে আবার চেষ্টা করুন") } } else {
                     csvLauncher.launch("khatiyan-report-${snap.fromIso}_${snap.toIso}.csv")
                 }
             }) {
                 Icon(Icons.Outlined.TableChart, "CSV রপ্তানি")
             }
             IconButton(onClick = {
-                if (snap == null) { scope.launch { snackbar.showSnackbar("রিপোর্ট লোড হচ্ছে…") } } else {
+                if (snap == null) { scope.launch { snackbar.showSnackbar("রিপোর্ট এখনো তৈরি হচ্ছে — একটু পরে আবার চেষ্টা করুন") } } else {
                     pdfLauncher.launch("khatiyan-report-${snap.fromIso}_${snap.toIso}.pdf")
                 }
             }) {
-                Icon(Icons.Outlined.PictureAsPdf, "PDF রপ্তানি", tint = MaterialTheme.colorScheme.error)
+                Icon(Icons.Outlined.PictureAsPdf, "PDF রপ্তানি", tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         },
     ) { padding ->
@@ -155,8 +155,8 @@ fun ReportsScreen(navController: NavController, container: AppContainer) {
                 .padding(padding)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             ChoiceChipsRow(
                 options = CashflowFilters.RANGES,
@@ -189,6 +189,15 @@ fun ReportsScreen(navController: NavController, container: AppContainer) {
                     MetricCard("পরিশোধ", Money.format(snap.repaidPaisa), MaterialTheme.colorScheme.onSurface, Modifier.weight(1f))
                 }
 
+                val hasFlow = snap.monthly.any { it.incomePaisa > 0L || it.expensePaisa > 0L || it.repaidPaisa > 0L }
+                if (!hasFlow) {
+                    AppCard {
+                        com.shohan.khatiyan.ui.components.EmptyState(
+                            title = "এই মাসে এখনো কোনো আয় বা ব্যয়ের হিসাব নেই",
+                            subtitle = "+ থেকে প্রথম হিসাব যোগ করুন।",
+                        )
+                    }
+                } else {
                 Column {
                     SectionTitle("মাসিক ধারা")
                     AppCard {
@@ -209,6 +218,7 @@ fun ReportsScreen(navController: NavController, container: AppContainer) {
                             Legend("পরিশোধ", KhatiyanBrand.GoldBright)
                         }
                     }
+                }
                 }
 
                 if (snap.expenseByCategory.isNotEmpty()) {
@@ -248,7 +258,7 @@ fun ReportsScreen(navController: NavController, container: AppContainer) {
 
                 if (snap.upcoming.isNotEmpty()) {
                     Column {
-                        SectionTitle("আসন্ন / বকেয়া পেমেন্ট")
+                        SectionTitle("আসন্ন পেমেন্ট")
                         AppCard(contentPadding = androidx.compose.foundation.layout.PaddingValues(4.dp)) {
                             snap.upcoming.take(10).forEach { item ->
                                 Row(
@@ -323,7 +333,7 @@ fun ReportsScreen(navController: NavController, container: AppContainer) {
                     }
                 }
                 Text(
-                    "PDF/CSV রপ্তানি উপরের বোতাম দুটো থেকে — সবকিছু আপনার ডিভাইসেই তৈরি হয়।",
+                    "PDF রিপোর্ট আর CSV ফাইল উপর থেকেই নামিয়ে রাখুন — সব কিছু আপনার ফোনেই তৈরি হয়।",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

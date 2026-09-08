@@ -60,7 +60,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 fun AppCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    contentPadding: androidx.compose.foundation.layout.PaddingValues = androidx.compose.foundation.layout.PaddingValues(16.dp),
+    contentPadding: androidx.compose.foundation.layout.PaddingValues = com.shohan.khatiyan.ui.theme.KhatiyanSpacing.cardPadding,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Card(
@@ -84,7 +84,7 @@ fun SectionTitle(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 2.dp, end = 2.dp, top = 6.dp, bottom = 6.dp),
+            .padding(top = 2.dp, bottom = 2.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -204,7 +204,7 @@ fun EmptyState(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 36.dp, horizontal = 24.dp),
+            .padding(vertical = 28.dp, horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
@@ -321,7 +321,7 @@ fun ChoiceChipsRow(
         modifier = modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
-            .padding(vertical = 2.dp),
+            .padding(vertical = 6.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         options.forEach { option ->
@@ -443,6 +443,7 @@ fun KhatiyanScaffold(
         topBar = {
             TopAppBar(
                 title = { Text(title, style = MaterialTheme.typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                titlePadding = androidx.compose.foundation.layout.PaddingValues(start = 20.dp, end = 8.dp),
                 navigationIcon = {
                     if (onBack != null) {
                         IconButton(onClick = onBack) {

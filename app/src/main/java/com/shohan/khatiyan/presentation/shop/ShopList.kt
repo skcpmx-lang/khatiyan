@@ -105,7 +105,7 @@ fun ShopListContent(
         TextField(
             value = state.query,
             onValueChange = vm::setQuery,
-            placeholder = { Text("দোকান বা মালিকের নাম খুঁজুন…") },
+            placeholder = { Text("দোকানের নাম খুঁজুন…") },
             singleLine = true,
             shape = MaterialTheme.shapes.medium,
             colors = TextFieldDefaults.colors(
@@ -116,7 +116,7 @@ fun ShopListContent(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 6.dp),
+                .padding(horizontal = 20.dp, vertical = 8.dp),
             leadingIcon = { Icon(com.shohan.khatiyan.ui.icons.KhatiyanIcons.Search, null) },
             trailingIcon = {
                 androidx.compose.material3.TextButton(onClick = vm::toggleArchived) {
@@ -131,7 +131,7 @@ fun ShopListContent(
 
         if (state.rows.isEmpty()) {
             EmptyState(
-                title = if (state.query.isNotBlank()) "এই নামে কোনো দোকান নেই" else "এখনও কোনো দোকান যোগ করা হয়নি",
+                title = if (state.query.isNotBlank()) "এই নামে কোনো দোকান নেই" else "এখনো কোনো দোকান যোগ করা হয়নি",
                 subtitle = "প্রতিটি দোকানের নিজস্ব খাতা থাকবে — বাকি, পণ্যের বিবরণ আর পরিশোধ, সব এক জায়গায়।",
                 actionLabel = if (state.query.isBlank()) "+ নতুন দোকান" else null,
                 onAction = { navController.navigate(Routes.shopEdit()) },
@@ -139,7 +139,7 @@ fun ShopListContent(
         } else {
             LazyColumn(
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                    start = 16.dp, end = 16.dp, top = 4.dp, bottom = 96.dp,
+                    start = 20.dp, end = 20.dp, top = 4.dp, bottom = 96.dp,
                 ),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {

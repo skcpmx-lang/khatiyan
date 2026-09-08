@@ -27,8 +27,8 @@ android {
         applicationId = "com.shohan.khatiyan"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
         vectorDrawables { useSupportLibrary = true }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations += listOf("en", "bn")
@@ -47,7 +47,7 @@ android {
 
     buildTypes {
         release {
-            // v1.0.0 ships un-minified on purpose: R8 keep-rules for the backup
+            // v1.x ships un-minified on purpose: R8 keep-rules for the backup
             // serializer paths can't be runtime-verified by CI, and a silently
             // broken backup is worse than a bigger APK. Minification + resource
             // shrinking are slated for 1.0.1 with instrumented coverage.

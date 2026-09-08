@@ -15,15 +15,15 @@ import androidx.compose.ui.unit.sp
 val KhatiyanTypography = Typography(
     displayLarge = TextStyle(
         fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold,
-        fontSize = 40.sp, lineHeight = 48.sp, letterSpacing = 0.sp,
+        fontSize = 32.sp, lineHeight = 42.sp, letterSpacing = 0.sp,
     ),
     displayMedium = TextStyle(
         fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold,
-        fontSize = 34.sp, lineHeight = 42.sp,
+        fontSize = 30.sp, lineHeight = 40.sp,
     ),
     headlineLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold,
-        fontSize = 28.sp, lineHeight = 36.sp,
+        fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold,
+        fontSize = 26.sp, lineHeight = 34.sp,
     ),
     headlineMedium = TextStyle(
         fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold,

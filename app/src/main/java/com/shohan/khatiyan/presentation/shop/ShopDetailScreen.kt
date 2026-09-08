@@ -117,7 +117,7 @@ class ShopDetailViewModel(private val container: AppContainer, private val shopI
     ): OverpaymentException? =
         try {
             container.shopRepo.updatePayment(payment, amount, dateIso, method, note, allow)
-            events.emit("পরিশোধের এন্ট্রি হালনাগাদ হয়েছে")
+            events.emit("পরিশোধের হিসাব আপডেট হয়েছে")
             null
         } catch (e: OverpaymentException) {
             if (allow) null else e
@@ -126,14 +126,14 @@ class ShopDetailViewModel(private val container: AppContainer, private val shopI
     fun deletePayment(paymentId: Long) {
         viewModelScope.launch {
             container.shopRepo.deletePayment(paymentId)
-            events.emit("পরিশোধের এন্ট্রি মুছে ফেলা হয়েছে")
+            events.emit("পরিশোধটি মুছে গেছে")
         }
     }
 
     fun deleteCredit(creditId: Long) {
         viewModelScope.launch {
             container.shopRepo.deleteCredit(creditId)
-            events.emit("বাকির এন্ট্রি মুছে ফেলা হয়েছে")
+            events.emit("বাকির হিসাবটি মুছে গেছে")
         }
     }
 }
@@ -196,7 +196,7 @@ fun ShopDetailScreen(navController: NavController, container: AppContainer, shop
             modifier = Modifier
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AppCard {
@@ -265,11 +265,11 @@ fun ShopDetailScreen(navController: NavController, container: AppContainer, shop
                 }
             }
 
-            SectionTitle("বাকির এন্ট্রি (${com.shohan.khatiyan.utilities.BnText.toBnDigits(detail.credits.size.toString())}টি)")
+            SectionTitle("বাকির হিসাব (${com.shohan.khatiyan.utilities.BnText.toBnDigits(detail.credits.size.toString())}টি)")
             if (detail.credits.isEmpty()) {
                 AppCard {
                     Text(
-                        "এখনও কোনো বাকির এন্ট্রি নেই। নিচের ‘নতুন বাকী’ বোতাম থেকে যোগ করুন — পণ্যের নাম, পরিমাণ, দাম সব থাকবে।",
+                        "এখনো কোনো বাকি যোগ করা হয়নি।\nনিচের + থেকে প্রথম বাকি লিখুন — পণ্য, পরিমাণ, দামসহ।",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -279,7 +279,7 @@ fun ShopDetailScreen(navController: NavController, container: AppContainer, shop
                     CreditCard(
                         entry = entry,
                         onEdit = { navController.navigate(Routes.creditEdit(shopId, entry.credit.id)) },
-                        onDelete = { deleteTarget = Triple("বাকির এন্ট্রিটি", entry.credit.id, "মুছে ফেললে এই এন্ট্রির সব পণ্যের হিসাবও মুছে যাবে। মোট বাকি আবার হিসাব হবে।") },
+                        onDelete = { deleteTarget = Triple("বাকির হিসাবটি", entry.credit.id, "মুছে দিলে এই হিসাবের পণ্যের তালিকাও মুছে যাবে। বাকিটুকু নতুন করে হিসাব হবে।") },
                     )
                 }
             }
@@ -288,7 +288,7 @@ fun ShopDetailScreen(navController: NavController, container: AppContainer, shop
             if (detail.payments.isEmpty()) {
                 AppCard {
                     Text(
-                        "এখনও কোনো পরিশোধ যোগ করা হয়নি।",
+                        "এখনো কোনো পরিশোধ যোগ করা হয়নি।",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -319,7 +319,7 @@ fun ShopDetailScreen(navController: NavController, container: AppContainer, shop
                             IconButton(onClick = { editPayment = p }) {
                                 Icon(Icons.Outlined.Edit, "সম্পাদনা", modifier = Modifier.size(18.dp))
                             }
-                            IconButton(onClick = { deleteTarget = Triple("পরিশোধের এন্ট্রি", p.id, "মুছে ফেললে বকেয়া আবার হিসাব হবে।") }) {
+                            IconButton(onClick = { deleteTarget = Triple("পরিশোধ", p.id, "মুছে ফেললে বকেয়া আবার হিসাব হবে।") }) {
                                 Icon(Icons.Outlined.DeleteOutline, "মুছুন", tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(18.dp))
                             }
                         }

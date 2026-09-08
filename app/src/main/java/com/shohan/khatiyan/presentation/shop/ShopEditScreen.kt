@@ -112,11 +112,11 @@ class ShopEditViewModel(private val container: AppContainer, private val shopId:
                 if (e is com.shohan.khatiyan.utilities.FinanceValidationException) {
                     update { it.copy(error = e.messageBn) }
                 } else {
-                    update { it.copy(error = "সংরক্ষণ করা যায়নি — আবার চেষ্টা করুন।") }
+                    update { it.copy(error = "সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।") }
                 }
                 return@launch
             }
-            events.emit(if (shopId == null) "দোকান যোগ হয়েছে" else "দোকানের তথ্য আপডেট হয়েছে")
+            events.emit(if (shopId == null) "দোকান যোগ হয়েছে" else "দোকানের তথ্য সংরক্ষিত হয়েছে")
             onSaved()
         }
     }
@@ -161,7 +161,7 @@ fun ShopEditScreen(navController: NavController, container: AppContainer, shopId
                 .fillMaxSize()
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AppCard {
@@ -199,7 +199,7 @@ fun ShopEditScreen(navController: NavController, container: AppContainer, shopId
             }
 
             PrimaryButton(
-                text = "সংরক্ষণ করুন",
+                text = "সংরক্ষণ",
                 onClick = { vm.save { navController.popBackStack() } },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = form.loaded,
@@ -232,7 +232,7 @@ fun ShopEditScreen(navController: NavController, container: AppContainer, shopId
                 if (showDelete) {
                     ConfirmDialog(
                         title = "নিশ্চিতভাবে মুছেন?",
-                        message = "দোকান “${form.name}”-এর সব বাকি, পণ্যের এন্ট্রি ও পরিশোধের রেকর্ড স্থায়ীভাবে মুছে যাবে। এটি ফেরানো যাবে না (ব্যাকআপ থাকলে রিস্টোর করা যাবে)।",
+                        message = "দোকান “${form.name}”-এর সব বাকি, পণ্যের হিসাব আর পরিশোধ — সব মুছে যাবে। এই কাজটি ফিরিয়ে নেওয়া যাবে না; ব্যাকআপ থাকলে সেখান থেকে ফেরানো যাবে।",
                         confirmLabel = "হ্যাঁ, সব মুছে দিন",
                         onConfirm = { showDelete = false; vm.delete { navController.popBackStack() } },
                         onDismiss = { showDelete = false },

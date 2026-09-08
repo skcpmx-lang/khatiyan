@@ -142,7 +142,7 @@ class EmiRepository(private val db: KhatiyanDatabase) {
         allowOverpayment: Boolean,
     ) {
         if (amountPaisa <= 0L) throw FinanceValidationException("টাকার পরিমাণ লিখুন।")
-        val emi = dao.getEmi(emiId) ?: throw FinanceValidationException("EMI রেকর্ডটি খুঁজে পাওয়া যায়নি।")
+        val emi = dao.getEmi(emiId) ?: throw FinanceValidationException("EMI-টির হিসাব পাওয়া যায়নি।")
         val paid = dao.getPaymentsRecent(emiId).fold(0L) { a, p -> Money.addClamped(a, p.amountPaisa) }
         val remaining = emi.financedPaisa - paid
         if (amountPaisa > remaining && !allowOverpayment) {
@@ -177,10 +177,10 @@ class EmiRepository(private val db: KhatiyanDatabase) {
         note: String,
         allowOverpayment: Boolean,
     ) {
-        val existing = dao.getPayment(paymentId) ?: throw FinanceValidationException("পরিশোধের রেকর্ডটি পাওয়া যায়নি।")
+        val existing = dao.getPayment(paymentId) ?: throw FinanceValidationException("পরিশোধটি খুঁজে পাওয়া যায়নি।")
         if (amountPaisa <= 0L) throw FinanceValidationException("টাকার পরিমাণ লিখুন।")
         val paidOthers = dao.getPaymentsRecent(emiId).filterNot { it.id == paymentId }.fold(0L) { a, p -> Money.addClamped(a, p.amountPaisa) }
-        val emi = dao.getEmi(emiId) ?: throw FinanceValidationException("EMI রেকর্ডটি খুঁজে পাওয়া যায়নি।")
+        val emi = dao.getEmi(emiId) ?: throw FinanceValidationException("EMI-টির হিসাব পাওয়া যায়নি।")
         val openRemaining = emi.financedPaisa - paidOthers
         if (amountPaisa > openRemaining && !allowOverpayment) {
             throw OverpaymentException(openRemaining.coerceAtLeast(0), amountPaisa)

@@ -138,7 +138,7 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             container.settings.setReminderHour(hour)
             if (_state.value.settings.notificationsEnabled) container.notificationsTurned(true)
-            _events.emit("রিমাইন্ডারের সময় আপডেট হয়েছে")
+            _events.emit("রিমাইন্ডারের সময় ঠিক হয়েছে")
         }
     }
 
@@ -176,8 +176,8 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
             val result = runCatching { container.backupManager.exportTo(context, uri) }
             _state.value = _state.value.copy(working = false)
             result.fold(
-                onSuccess = { count -> onDone("ব্যাকআপ তৈরি: ${BnText.toBnDigits(count.toString())}টি রেকর্ড") },
-                onFailure = { onDone("ব্যাকআপ ব্যর্থ: ফাইলটি লেখা যায়নি") },
+                onSuccess = { count -> onDone("ব্যাকআপ তৈরি হয়েছে — ${BnText.toBnDigits(count.toString())}টি হিসাব সংরক্ষিত") },
+                onFailure = { onDone("ব্যাকআপ তৈরি করা যায়নি। আবার চেষ্টা করুন।") },
             )
         }
     }
@@ -191,11 +191,11 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
                 onSuccess = { sum ->
                     onDone(
                         "ফেরানো সম্পন্ন (${BnDates.formatShort(BnDates.fromIso(sum.exportedAtIso) ?: BnDates.today())}) — " +
-                            "${BnText.toBnDigits(sum.totalRows.toString())}টি রেকর্ড ফিরে এসেছে।",
+                            "${BnText.toBnDigits(sum.totalRows.toString())}টি হিসাব ফিরে এসেছে।",
                     )
                 },
                 onFailure = { e ->
-                    val msg = if (e is com.shohan.khatiyan.data.backup.BackupFormatException) e.messageBn else "ফাইলটি পড়া যায়নি — সঠিক ব্যাকআপ ফাইল দিন।"
+                    val msg = if (e is com.shohan.khatiyan.data.backup.BackupFormatException) e.messageBn else "ব্যাকআপ ফাইলটি পড়া যাচ্ছে না। অন্য একটি ব্যাকআপ ফাইল চেষ্টা করুন।"
                     onDone("রিস্টোর ব্যর্থ: $msg")
                 },
             )
@@ -221,7 +221,7 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             container.db.clearAllTables()
             onDone()
-            _events.emit("সব তথ্য মুছে ফেলা হয়েছে — অ্যাপ একবার বন্ধ করে চালু করুন।")
+            _events.emit("সব হিসাব মুছে দেওয়া হয়েছে — অ্যাপ একবার বন্ধ করে আবার চালু করুন।")
         }
     }
 }
@@ -255,7 +255,7 @@ fun SettingsScreen(navController: NavController, container: AppContainer) {
     }
     val notifPermLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
-    ) { granted -> if (!granted) pendingMessage = "নোটিফিকেশন পারমিশন দেওয়া হয়নি — রিমাইন্ডার দেখানো হতে পারে না।" }
+    ) { granted -> if (!granted) pendingMessage = "নোটিফিকেশনের অনুমতি দেওয়া হয়নি — রিমাইন্ডার আসতে চাইলে সেটিংস থেকে দিয়ে নিন।" }
     val csvLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.CreateDocument("text/csv"),
     ) { uri ->
@@ -274,11 +274,11 @@ fun SettingsScreen(navController: NavController, container: AppContainer) {
         snackbarHostState = snackbar,
     ) { padding ->
         Column(
-            modifier = Modifier.padding(padding).verticalScroll(rememberScrollState()).padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(padding).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 4.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             AppCard {
-                Text("আপনার প্রোফাইল", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text("আপনার প্রোফাইল", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 var nameDraft by remember(settings.userName) { mutableStateOf(settings.userName) }
                 KhatiyanTextField(nameDraft, { nameDraft = it }, "আপনার নাম")
@@ -295,7 +295,7 @@ fun SettingsScreen(navController: NavController, container: AppContainer) {
                 )
             }
 
-            SectionTitle("রিমাইন্ডার")
+            SectionTitle("নোটিফিকেশন")
             AppCard {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
@@ -395,7 +395,7 @@ fun SettingsScreen(navController: NavController, container: AppContainer) {
                     Column(Modifier.weight(1f)) {
                         Text("স্ক্রিনশট ব্লক", style = MaterialTheme.typography.titleSmall)
                         Text(
-                            "সুরক্ষার জন্য স্ক্রিনশট ও রিসেন্টস-প্রিভিউ আটকায়",
+                            "স্ক্রিনশট বন্ধ রাখে; সাম্প্রতিক অ্যাপের তালিকায় হিসাবের ছবি দেখায় না",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -404,7 +404,7 @@ fun SettingsScreen(navController: NavController, container: AppContainer) {
                 }
             }
 
-            SectionTitle("ব্যাকআপ ও ডাটা")
+            SectionTitle("ডেটা ও ব্যাকআপ")
             if (s.working) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -419,48 +419,57 @@ fun SettingsScreen(navController: NavController, container: AppContainer) {
             AppCard {
                 SettingAction(
                     Icons.Outlined.Backup,
-                    "ব্যাকআপ ফাইল তৈরি",
-                    "সব তথ্য একটি JSON ফাইলে — ড্রাইভ/ফোনে জমা রাখুন",
+                    "ব্যাকআপ ফাইল তৈরি করুন",
+                    "আপনার সব হিসাব একটি ফাইলে সংরক্ষণ করুন।",
                 ) { backupLauncher.launch(container.backupManager.suggestFileName()) }
                 Box(Modifier.fillMaxWidth().height(1.dp).background(MaterialTheme.colorScheme.outlineVariant))
                 SettingAction(
                     Icons.Outlined.Restore,
-                    "ব্যাকআপ থেকে ফেরান",
-                    "সাবধান: বর্তমান সব তথ্য মুছে ফাইলের তথ্য বসবে",
+                    "ব্যাকআপ থেকে ফিরিয়ে আনুন",
+                    "ব্যাকআপ থেকে তথ্য ফেরালে বর্তমান হিসাব বদলে যাবে। ফেরানোর আগে একটি ব্যাকআপ রেখে নিন।",
                 ) { restoreLauncher.launch(arrayOf("application/json", "text/plain", "*/*")) }
                 Box(Modifier.fillMaxWidth().height(1.dp).background(MaterialTheme.colorScheme.outlineVariant))
                 SettingAction(
                     Icons.Outlined.TableChart,
-                    "এই মাসের লেনদেন CSV",
-                    "এক্সসেল/গুগল শিটে খোলা যায় এমন ফাইল",
+                    "CSV রপ্তানি",
+                    "লেনদেনগুলো Excel বা Google Sheets-এ ব্যবহারের জন্য নামিয়ে রাখুন।",
                 ) {
                     csvLauncher.launch("khatiyan-${BnDates.today().year}-${BnText.toBnDigits(BnDates.today().monthValue.toString())}.csv")
                 }
                 Box(Modifier.fillMaxWidth().height(1.dp).background(MaterialTheme.colorScheme.outlineVariant))
                 SettingAction(
                     Icons.Outlined.Info,
-                    "সব তথ্য মুছে ফেলুন",
-                    "ডিভাইস থেকে স্থায়ীভাবে সব রেকর্ড মুছে যাবে। আগে ব্যাকআপ নিন।",
+                    "সব হিসাব মুছে ফেলুন",
+                    "মুছে দিলে সব হিসাব ফোন থেকে চিরকালের জন্য মুছে যাবে। আগে একটা ব্যাকআপ রাখুন।",
                     destructive = true,
                 ) { showWipe = true }
             }
 
-            SectionTitle("খতিয়ান সম্পর্কে")
+            SectionTitle("অ্যাপ সম্পর্কে")
             AppCard {
                 Text("খতিয়ান (Khatiyan) v${BuildConfig.VERSION_NAME}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    "সম্পূর্ণ অফলাইন হিসাবের অ্যাপ — ইন্টারনেট পারমিশন নেই, কোনো বিজ্ঞাপন বা ট্র্যাকিং নেই, " +
-                        "কোনো ডাটা সার্ভারে যায় না। সব তথ্য শুধু আপনার ফোনেই থাকে।",
+                    "সম্পূর্ণ অফলাইন হিসাবের অ্যাপ — ইন্টারনেটের অনুমতি নেই, বিজ্ঞাপন নেই, ট্র্যাকিং নেই। " +
+                        "আপনার সব তথ্য শুধু আপনার ফোনেই থাকে।",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Spacer(Modifier.height(8.dp))
-                Text("তৈরি করেছেন: শোহান খান", style = MaterialTheme.typography.titleSmall)
-                Text("যোগাযোগ: helloiamshohan@gmail.com", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f), MaterialTheme.shapes.small)
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                ) {
+                    Text("তৈরি করেছেন", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text("Shohan Khan", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                    Spacer(Modifier.height(2.dp))
+                    Text("helloiamshohan@gmail.com", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
                 Spacer(Modifier.height(6.dp))
                 Text(
-                    "টীকা: সব টাকার অঙ্ক পয়সা এককে সংরক্ষিত হয় — দশমিকে কোনো রাউন্ডিং ভুল হয় না।",
+                    "টাকার হিসাব সবসময় পয়সা পর্যন্ত নিখুঁত — দশমিকে কোনো গোলাগোল হয় না।",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -509,8 +518,8 @@ fun SettingsScreen(navController: NavController, container: AppContainer) {
 
     confirmRestoreUri?.let { uri ->
         ConfirmDialog(
-            title = "রিস্টোর নিশ্চিত করুন",
-            message = "রিস্টোর করলে বর্তমান সব তথ্য মুছে ফাইলের তথ্য বসবে। এটি আর ফেরানো যাবে না — তাই চাইলে আগে নতুন ব্যাকআপ নিয়ে নিন।",
+            title = "ব্যাকআপ থেকে ফেরাবেন?",
+            message = "ফেরানো হলে বর্তমান হিসাবগুলো বদলে যাবে — আগের হিসাব আর ফিরে পাওয়া যাবে না। চাইলে আগে একটা নতুন ব্যাকআপ রেখে দিন।",
             confirmLabel = "ফেরান",
             onConfirm = {
                 confirmRestoreUri = null
@@ -523,9 +532,9 @@ fun SettingsScreen(navController: NavController, container: AppContainer) {
 
     if (showWipe) {
         ConfirmDialog(
-            title = "সব মুছে ফেলবেন?",
-            message = "দোকান, ঋণ, EMI, মানুষ, লেনদেন — সব রেকর্ড স্থায়ীভাবে মুছে যাবে। ব্যাকআপ না থাকলে তথ্য হারিয়ে যাবে।",
-            confirmLabel = "হ্যাঁ, সব মুছুন",
+            title = "সব হিসাব মুছে ফেলবেন?",
+            message = "দোকান, লোন, EMI, ব্যক্তিগত ধার, আয়-ব্যয় — সব হিসাব মুছে যাবে। এই কাজটি আর ফিরিয়ে নেওয়া যাবে না; ব্যাকআপ থাকলে সেখান থেকে ফেরানো যাবে।",
+            confirmLabel = "মুছে ফেলুন",
             onConfirm = {
                 showWipe = false
                 vm.wipeAllData { vm.emit("সব তথ্য মুছে ফেলা হয়েছে") }

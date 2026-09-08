@@ -32,7 +32,7 @@ object NotificationHelper {
                 context.getString(R.string.app_name) + " — পেমেন্ট স্মরণ",
                 NotificationManager.IMPORTANCE_DEFAULT,
             ).apply {
-                description = "বকেয়া ও আসন্ন পেমেন্টের রোজের স্মরণ"
+                description = "প্রতিদিন বকেয়া আর আগামীকালের পেমেন্টের স্মরণ"
                 enableVibration(false)
                 setShowBadge(false)
             }
@@ -63,7 +63,7 @@ object NotificationHelper {
         val publicNotification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_khatiyan)
             .setContentTitle(context.getString(R.string.app_name))
-            .setContentText("আপনার দেখা প্রয়োজন")
+            .setContentText("একবার দেখে নিন")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
 

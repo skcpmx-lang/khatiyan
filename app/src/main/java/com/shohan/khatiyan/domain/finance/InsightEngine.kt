@@ -47,7 +47,7 @@ object InsightEngine {
             return listOf(
                 Insight(
                     id = "first-run",
-                    text = "খতিয়ান প্রস্তুত — নিচের ‘+’ বোতাম থেকে প্রথম হিসাব যোগ করুন।",
+                    text = "এখনও কোনো হিসাব যোগ করা হয়নি।\nনিচের + থেকে আপনার প্রথম হিসাব যোগ করুন।",
                     tone = InsightTone.INFO,
                 ),
             )

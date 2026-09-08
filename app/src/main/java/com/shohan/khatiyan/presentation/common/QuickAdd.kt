@@ -16,9 +16,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.outlined.AccountBalance
 import androidx.compose.material.icons.outlined.Payments
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.PhoneAndroid
 import androidx.compose.material.icons.outlined.Storefront
 import androidx.compose.material.icons.outlined.TrendingUp
@@ -58,14 +58,14 @@ import com.shohan.khatiyan.ui.components.WarningBanner
 import com.shohan.khatiyan.ui.theme.KhatiyanBrand
 import kotlinx.coroutines.launch
 
-enum class QuickAction(val labelBn: String, val icon: ImageVector) {
-    SHOP_CREDIT("দোকানের বাকী যোগ করুন", Icons.Outlined.Storefront),
-    PAYMENT("কোনো বকেয়ায় পরিশোধ", Icons.Outlined.Payments),
-    LOAN("নতুন লোন", Icons.Outlined.AccountBalance),
-    EMI("নতুন EMI / কিস্তির পণ্য", Icons.Outlined.PhoneAndroid),
-    PERSONAL_DEBT("ব্যক্তিগত ধার", Icons.AutoMirrored.Outlined.Login),
-    INCOME("আয় যোগ করুন", Icons.Outlined.TrendingUp),
-    EXPENSE("ব্যয় যোগ করুন", Icons.Outlined.TrendingDown),
+enum class QuickAction(val labelBn: String, val shortLabel: String, val icon: ImageVector) {
+    SHOP_CREDIT("নতুন বাকী", "দোকানের বাকী", Icons.Outlined.Storefront),
+    PAYMENT("কোনো বকেয়ায় পরিশোধ", "পরিশোধ", Icons.Outlined.Payments),
+    LOAN("নতুন লোন", "লোন", Icons.Outlined.AccountBalance),
+    EMI("নতুন EMI / কিস্তির পণ্য", "EMI", Icons.Outlined.PhoneAndroid),
+    PERSONAL_DEBT("নতুন ধারের হিসাব", "ব্যক্তিগত ধার", Icons.Outlined.Person),
+    INCOME("আয় যোগ করুন", "আয়", Icons.Outlined.TrendingUp),
+    EXPENSE("ব্যয় যোগ করুন", "ব্যয়", Icons.Outlined.TrendingDown),
 }
 
 /** Quick-Add sheet (Phase 8). Every row performs real navigation — no dead buttons. */
@@ -204,7 +204,7 @@ private fun QuickPaymentFlow(container: AppContainer, onDone: (String) -> Unit) 
         Text(
             when (step) {
                 0 -> "কোন খাতায় পরিশোধ?"
-                1 -> "কোন এন্ট্রিতে?"
+                1 -> "কোন হিসাবে দিচ্ছেন?"
                 else -> "পরিশোধের পরিমাণ"
             },
             style = MaterialTheme.typography.titleLarge,
@@ -218,7 +218,7 @@ private fun QuickPaymentFlow(container: AppContainer, onDone: (String) -> Unit) 
             )
             1 -> {
                 if (entityOptions.isEmpty()) {
-                    WarningBanner("এই মুহূর্তে বকেয়া কোনো এন্ট্রি নেই।", tone = PillTone.INFO)
+                    WarningBanner("এখন কোনো বকেয়া নেই।", tone = PillTone.INFO)
                 } else {
                     entityOptions.forEach { opt ->
                         Row(
@@ -239,7 +239,7 @@ private fun QuickPaymentFlow(container: AppContainer, onDone: (String) -> Unit) 
             else -> {
                 val entity = selectedEntity
                 if (entity == null) {
-                    Text("এন্ট্রি নির্বাচন হয়নি।", style = MaterialTheme.typography.bodyMedium)
+                    Text("কোনো হিসাব বাছা হয়নি।", style = MaterialTheme.typography.bodyMedium)
                 } else {
                     AmountInput(
                         value = amountText,
@@ -260,7 +260,7 @@ private fun QuickPaymentFlow(container: AppContainer, onDone: (String) -> Unit) 
                     if (excess != null) {
                         Spacer(Modifier.height(10.dp))
                         WarningBanner(
-                            "বাকির তুলনায় ${Money.format(excess)} বেশি দিচ্ছেন। নিশ্চিত করলে অতিরিক্ত অংশ “অগ্রিম জমা” হিসেবে থাকবে — বকেয়া ০ দেখাবে, ঋণ নেতিবাচক হবে না।",
+                            "বাকির চেয়ে ${Money.format(excess)} বেশি দিচ্ছেন। রাজি থাকলে বাড়তি অংশ “অগ্রিম জমা” থাকবে — বকেয়া ০ দেখাবে।",
                         )
                         Spacer(Modifier.height(8.dp))
                         PrimaryButton(

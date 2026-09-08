@@ -1,6 +1,7 @@
 package com.shohan.khatiyan.presentation.dashboard
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -91,9 +93,12 @@ fun DashboardScreen(navController: NavController, container: AppContainer) {
                 .fillMaxWidth()
                 .padding(padding),
             contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                start = 16.dp, end = 16.dp, top = 4.dp, bottom = 96.dp,
+                start = com.shohan.khatiyan.ui.theme.KhatiyanSpacing.screenH,
+                end = com.shohan.khatiyan.ui.theme.KhatiyanSpacing.screenH,
+                top = 8.dp,
+                bottom = com.shohan.khatiyan.ui.theme.KhatiyanSpacing.fabClearance,
             ),
-            verticalArrangement = Arrangement.spacedBy(14.dp),
+            verticalArrangement = Arrangement.spacedBy(com.shohan.khatiyan.ui.theme.KhatiyanSpacing.section),
         ) {
             item { GreetingRow(snap?.userName.orEmpty()) }
 
@@ -233,7 +238,7 @@ fun DashboardScreen(navController: NavController, container: AppContainer) {
                         val slices = snap?.debtSlices ?: emptyList()
                         if (slices.isEmpty() || (snap?.totalOutstandingPaisa ?: 0) <= 0) {
                             Text(
-                                "এখন কোনো বকেয়া নেই — নিশ্চিত থাকুন। 👌",
+                                "এখন কোনো বকেয়া নেই। 👍",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -369,7 +374,7 @@ private fun GreetingRow(name: String) {
     val greet = remember(hour) {
         when {
             hour < 5 -> "রাত জেগে হিসাব? 🌙"
-            hour < 12 -> "সুপ্রভাত"
+            hour < 12 -> "শুভ সকাল"
             hour < 17 -> "শুভ দুপুর"
             hour < 20 -> "শুভ সন্ধ্যা"
             else -> "শুভ রাত্রি"
@@ -378,7 +383,6 @@ private fun GreetingRow(name: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f)) {
@@ -430,23 +434,34 @@ private fun HeroDebtCard(
         tonalElevation = 0.dp,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Column(Modifier.padding(18.dp)) {
+        val totalOut = snapshot?.totalOutstandingPaisa ?: 0L
+        val calm = totalOut <= 0L
+        Column(Modifier.padding(20.dp)) {
         Text(
-            "বর্তমান মোট বাকি",
+            if (calm) "সারাবহাল" else "বর্তমান মোট বাকি",
             style = MaterialTheme.typography.labelMedium,
             color = Color(0xFFCFE8D9),
         )
         Spacer(Modifier.height(4.dp))
-        Text(
-            money(snapshot?.totalOutstandingPaisa ?: 0),
-            style = MaterialTheme.typography.displayMedium,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        if (calm) {
+            Text(
+                "বর্তমানে কোনো বাকি নেই",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White,
+            )
+        } else {
+            Text(
+                money(totalOut),
+                style = MaterialTheme.typography.displayMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
         Spacer(Modifier.height(12.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        if (!calm) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             ObligationKind.entries.forEach { kind ->
                 val paisa = snapshot?.outstandingByKind?.get(kind) ?: 0L
                 Column(
@@ -474,7 +489,7 @@ private fun HeroDebtCard(
         }
         Spacer(Modifier.height(8.dp))
         Text(
-            "বিস্তারিত হিসাব দেখতে চাপুন →",
+            "বিস্তারিত দেখুন →",
             style = MaterialTheme.typography.labelMedium,
             color = Color(0xFFD9E9DF),
         )
@@ -595,34 +610,43 @@ private fun DueItemRow(item: DueItem, onOpen: (DueItem) -> Unit) {
 private fun QuickActionsGrid(onAction: (QuickAction) -> Unit) {
     Column {
         SectionTitle("দ্রুত কাজ")
+        // Exactly six primary actions in a 2 x 3 grid — a balanced, complete layout.
         val actions = listOf(
             QuickAction.SHOP_CREDIT, QuickAction.LOAN, QuickAction.EMI,
-            QuickAction.PERSONAL_DEBT, QuickAction.INCOME, QuickAction.EXPENSE, QuickAction.PAYMENT,
+            QuickAction.PERSONAL_DEBT, QuickAction.INCOME, QuickAction.EXPENSE,
         )
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            actions.chunked(3).forEach { rowActions ->
+            actions.chunked(2).forEach { rowActions ->
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     rowActions.forEach { action ->
-                        Column(
+                        Row(
                             modifier = Modifier
                                 .weight(1f)
-                                .clickable { onAction(action) }
+                                .height(56.dp)
                                 .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.medium)
-                                .padding(vertical = 12.dp, horizontal = 8.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
+                                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, MaterialTheme.shapes.medium)
+                                .clip(MaterialTheme.shapes.medium)
+                                .clickable { onAction(action) }
+                                .padding(horizontal = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Icon(action.icon, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(22.dp))
-                            Spacer(Modifier.height(6.dp))
+                            Box(
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .background(KhatiyanBrand.Primary.copy(alpha = 0.08f), MaterialTheme.shapes.small),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Icon(action.icon, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
+                            }
+                            Spacer(Modifier.width(10.dp))
                             Text(
-                                action.labelBn.removePrefix("নতুন ").removeSuffix(" যোগ করুন"),
-                                style = MaterialTheme.typography.labelMedium,
-                                maxLines = 2,
+                                action.shortLabel,
+                                style = MaterialTheme.typography.titleSmall,
+                                maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                             )
                         }
                     }
-                    repeat(3 - rowActions.size) { Spacer(Modifier.weight(1f)) }
                 }
             }
         }

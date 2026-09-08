@@ -139,7 +139,7 @@ fun LoanListContent(
         TextField(
             value = state.query,
             onValueChange = vm::setQuery,
-            placeholder = { Text("লোন বা প্রতিষ্ঠানের নাম খুঁজুন…") },
+            placeholder = { Text("লোনের নাম বা প্রতিষ্ঠান খুঁজুন…") },
             singleLine = true,
             shape = MaterialTheme.shapes.medium,
             colors = TextFieldDefaults.colors(
@@ -150,8 +150,8 @@ fun LoanListContent(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 6.dp),
-            leadingIcon = { Icon(Icons.Outlined.AccountBalance, null) },
+                .padding(horizontal = 20.dp, vertical = 8.dp),
+            leadingIcon = { Icon(com.shohan.khatiyan.ui.icons.KhatiyanIcons.Search, null) },
             trailingIcon = {
                 androidx.compose.material3.TextButton(onClick = vm::toggleArchived) {
                     Text(
@@ -173,7 +173,7 @@ fun LoanListContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 state.rows.forEach { row ->
@@ -366,7 +366,7 @@ class LoanEditViewModel(private val container: AppContainer, private val loanId:
             val failure = result.exceptionOrNull()
             if (failure != null) {
                 val msg = if (failure is com.shohan.khatiyan.utilities.FinanceValidationException) failure.messageBn
-                else "সংরক্ষণ করা যায়নি — ইনপুট দেখে নিন।"
+                else "সংরক্ষণ করা যায়নি। লেখাগুলো মিলিয়ে আবার চেষ্টা করুন।"
                 _state.value = _state.value.copy(error = msg)
                 return@launch
             }
@@ -389,7 +389,7 @@ fun LoanEditScreen(navController: NavController, container: AppContainer, loanId
             modifier = Modifier
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AppCard {
@@ -471,7 +471,7 @@ fun LoanEditScreen(navController: NavController, container: AppContainer, loanId
             }
 
             PrimaryButton(
-                "সংরক্ষণ করুন",
+                "সংরক্ষণ",
                 onClick = { vm.save { navController.popBackStack() } },
                 modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
                 enabled = f.loaded,
@@ -519,7 +519,7 @@ class LoanDetailViewModel(private val container: AppContainer, private val loanI
     fun deletePayment(paymentId: Long) {
         viewModelScope.launch {
             container.loanRepo.deletePayment(loanId, paymentId)
-            events.emit("পরিশোধের এন্ট্রি মুছে ফেলা হয়েছে")
+            events.emit("পরিশোধটি মুছে দেওয়া হয়েছে")
         }
     }
 
@@ -530,7 +530,7 @@ class LoanDetailViewModel(private val container: AppContainer, private val loanI
     fun delete(onDone: () -> Unit) {
         viewModelScope.launch {
             container.loanRepo.deleteLoan(loanId)
-            events.emit("লোন ও তার সব কিস্তির রেকর্ড মুছে ফেলা হয়েছে")
+            events.emit("লোন আর তার সব কিস্তির হিসাব মুছে গেছে")
             onDone()
         }
     }
@@ -584,7 +584,7 @@ fun LoanDetailScreen(navController: NavController, container: AppContainer, loan
             modifier = Modifier
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AppCard {
@@ -698,7 +698,7 @@ fun LoanDetailScreen(navController: NavController, container: AppContainer, loan
 
             SectionTitle("পরিশোধের ইতিহাস")
             if (d.payments.isEmpty()) {
-                AppCard { Text("এখনও কোনো পরিশোধ হয়নি।", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                AppCard { Text("এখনো কোনো পরিশোধ হয়নি।", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) }
             } else {
                 AppCard(contentPadding = PaddingValues(top = 4.dp, bottom = 4.dp)) {
                     d.payments.forEach { p ->
@@ -736,7 +736,7 @@ fun LoanDetailScreen(navController: NavController, container: AppContainer, loan
             androidx.compose.material3.TextButton(
                 onClick = { showDelete = true },
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text("লোন ও সব রেকর্ড মুছে ফেলুন", color = MaterialTheme.colorScheme.error) }
+            ) { Text("লোন আর সব হিসাব মুছে ফেলুন", color = MaterialTheme.colorScheme.error) }
             Spacer(Modifier.height(24.dp))
         }
     }
@@ -766,7 +766,7 @@ fun LoanDetailScreen(navController: NavController, container: AppContainer, loan
     if (showDelete) {
         ConfirmDialog(
             title = "লোন মুছে ফেলবেন?",
-            message = "লোনটি, তার কিস্তির সময়সূচি ও সব পরিশোধের রেকর্ড মুছে যাবে। মুছে ফেলার আগে ব্যাকআপ রাখা বুদ্ধিমানের কাজ।",
+            message = "লোনটা, তার কিস্তির হিসাব আর সব পরিশোধ মুছে যাবে। মুছে ফেলার আগে একটা ব্যাকআপ রেখে দিন।",
             confirmLabel = "হ্যাঁ, মুছে দিন",
             danger = true,
             onConfirm = { showDelete = false; vm.delete { navController.popBackStack() } },
@@ -837,7 +837,7 @@ fun PaymentEntryEditDialog(
                             if (out == null) onDismiss() else error = "সম্পাদনা করা যায়নি।"
                         }
                     },
-                ) { Text("হ্যাঁ, সংরক্ষণ করুন", color = MaterialTheme.colorScheme.primary) }
+                ) { Text("হ্যাঁ, রাখুন", color = MaterialTheme.colorScheme.primary) }
             } else {
                 androidx.compose.material3.TextButton(
                     onClick = {
@@ -848,7 +848,7 @@ fun PaymentEntryEditDialog(
                             if (out != null) pendingExcess = out.excessPaisa else onDismiss()
                         }
                     },
-                ) { Text("সংরক্ষণ করুন", color = MaterialTheme.colorScheme.primary) }
+                ) { Text("সংরক্ষণ", color = MaterialTheme.colorScheme.primary) }
             }
         },
         dismissButton = { androidx.compose.material3.TextButton(onClick = onDismiss) { Text("বাতিল") } },

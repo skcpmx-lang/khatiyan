@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.layout.systemBarsPadding
 import com.shohan.khatiyan.di.AppContainer
 import com.shohan.khatiyan.ui.components.PrimaryButton
 import com.shohan.khatiyan.utilities.BnText
@@ -105,6 +106,7 @@ fun LockScreen(container: AppContainer) {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .systemBarsPadding()
             .padding(horizontal = 34.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,

@@ -146,8 +146,8 @@ fun EmiListContent(navController: NavController, container: AppContainer, modifi
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 6.dp),
-            leadingIcon = { Icon(Icons.Outlined.PhoneAndroid, null) },
+                .padding(horizontal = 20.dp, vertical = 8.dp),
+            leadingIcon = { Icon(com.shohan.khatiyan.ui.icons.KhatiyanIcons.Search, null) },
         )
         if (state.rows.isEmpty()) {
             EmptyState(
@@ -158,7 +158,7 @@ fun EmiListContent(navController: NavController, container: AppContainer, modifi
             )
         } else {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 state.rows.forEach { row ->
@@ -318,7 +318,7 @@ class EmiEditViewModel(private val container: AppContainer, private val emiId: L
             val failure = result.exceptionOrNull()
             if (failure != null) {
                 val msg = if (failure is com.shohan.khatiyan.utilities.FinanceValidationException) failure.messageBn
-                else "সংরক্ষণ করা যায়নি — ইনপুট দেখে নিন।"
+                else "সংরক্ষণ করা যায়নি। লেখাগুলো মিলিয়ে আবার চেষ্টা করুন।"
                 _state.value = _state.value.copy(error = msg)
                 return@launch
             }
@@ -341,7 +341,7 @@ fun EmiEditScreen(navController: NavController, container: AppContainer, emiId: 
             modifier = Modifier
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AppCard {
@@ -409,7 +409,7 @@ fun EmiEditScreen(navController: NavController, container: AppContainer, emiId: 
                 Text(f.error ?: "", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
             }
             PrimaryButton(
-                "সংরক্ষণ করুন",
+                "সংরক্ষণ",
                 onClick = { vm.save { navController.popBackStack() } },
                 modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
                 enabled = f.loaded,
@@ -457,7 +457,7 @@ class EmiDetailViewModel(private val container: AppContainer, private val emiId:
     fun deletePayment(paymentId: Long) {
         viewModelScope.launch {
             container.emiRepo.deletePayment(emiId, paymentId)
-            events.emit("পরিশোধের এন্ট্রি মুছে ফেলা হয়েছে")
+            events.emit("পরিশোধটি মুছে দেওয়া হয়েছে")
         }
     }
 
@@ -468,7 +468,7 @@ class EmiDetailViewModel(private val container: AppContainer, private val emiId:
     fun delete(onDone: () -> Unit) {
         viewModelScope.launch {
             container.emiRepo.deleteEmi(emiId)
-            events.emit("EMI রেকর্ড ও সব কিস্তি মুছে ফেলা হয়েছে")
+            events.emit("EMI আর তার সব কিস্তির হিসাব মুছে গেছে")
             onDone()
         }
     }
@@ -516,7 +516,7 @@ fun EmiDetailScreen(navController: NavController, container: AppContainer, emiId
             modifier = Modifier
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             AppCard {
@@ -624,7 +624,7 @@ fun EmiDetailScreen(navController: NavController, container: AppContainer, emiId
 
             SectionTitle("পরিশোধের ইতিহাস")
             if (d.payments.isEmpty()) {
-                AppCard { Text("এখনও কোনো কিস্তি পরিশোধ করা হয়নি।", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                AppCard { Text("এখনো কোনো কিস্তি পরিশোধ করা হয়নি।", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) }
             } else {
                 AppCard(contentPadding = PaddingValues(top = 4.dp, bottom = 4.dp)) {
                     d.payments.forEach { p ->
@@ -658,7 +658,7 @@ fun EmiDetailScreen(navController: NavController, container: AppContainer, emiId
                 modifier = Modifier.fillMaxWidth(),
             )
             androidx.compose.material3.TextButton(onClick = { showDelete = true }, modifier = Modifier.fillMaxWidth()) {
-                Text("EMI রেকর্ড ও সব কিস্তি মুছে ফেলুন", color = MaterialTheme.colorScheme.error)
+                Text("EMI আর সব কিস্তি মুছে ফেলুন", color = MaterialTheme.colorScheme.error)
             }
             Spacer(Modifier.height(24.dp))
         }
@@ -689,7 +689,7 @@ fun EmiDetailScreen(navController: NavController, container: AppContainer, emiId
     if (showDelete) {
         ConfirmDialog(
             title = "EMI মুছে ফেলবেন?",
-            message = "পণ্যের রেকর্ড, কিস্তির সময়সূচি ও সব পরিশোধ মুছে যাবে। আগে ব্যাকআপ নিয়ে রাখুন।",
+            message = "পণ্যের হিসাব, কিস্তির সময়সূচি আর সব পরিশোধ মুছে যাবে। আগে একটা ব্যাকআপ রেখে দিন।",
             confirmLabel = "হ্যাঁ, মুছে দিন",
             danger = true,
             onConfirm = { showDelete = false; vm.delete { navController.popBackStack() } },

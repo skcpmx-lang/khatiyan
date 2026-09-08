@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -79,12 +78,12 @@ fun SearchScreen(navController: NavController, container: AppContainer) {
     val hits by vm.hits.collectAsStateWithLifecycle()
     val query by vm.query.collectAsStateWithLifecycle()
 
-    KhatiyanScaffold(title = "সবকিছু খুঁজুন", onBack = { navController.popBackStack() }) { padding ->
+    KhatiyanScaffold(title = "খুঁজুন", onBack = { navController.popBackStack() }) { padding ->
         Column(modifier = Modifier.padding(padding).fillMaxWidth()) {
             TextField(
                 value = query,
                 onValueChange = vm::setQuery,
-                placeholder = { Text("দোকান, মানুষ, পণ্য, নোট… লিখুন") },
+                placeholder = { Text("দোকান, লোন, ধার, পণ্য, নোট খুঁজুন…") },
                 singleLine = true,
                 shape = MaterialTheme.shapes.large,
                 colors = TextFieldDefaults.colors(
@@ -94,16 +93,16 @@ fun SearchScreen(navController: NavController, container: AppContainer) {
                     unfocusedIndicatorColor = Color.Transparent,
                 ),
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
-                leadingIcon = { Icon(Icons.Outlined.Search, null) },
+                leadingIcon = { Icon(com.shohan.khatiyan.ui.icons.KhatiyanIcons.Search, null) },
             )
             val res = hits
             if (query.isBlank() || res == null) {
-                EmptyState("খুঁজুন", "দোকানের নাম, মানুষ, পণ্যের নোট — যা লিখেছেন সব এখানে পাওয়া যাবে।")
+                EmptyState("খুঁজুন", "দোকানের নাম, লোন, ধার, পণ্যের নোট — যা লিখেছেন সব এখানে খুঁজে পাবেন।")
             } else if (res.isEmpty) {
-                EmptyState("কিছু পাওয়া যায়নি", "“$query” নামে মিলছে এমন কোনো এন্ট্রি নেই।")
+                EmptyState("কিছু পাওয়া যায়নি", "“$query” নামে কিছু পাওয়া যায়নি।")
             } else {
                 Column(
-                    modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp),
+                    modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 20.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     if (res.shops.isNotEmpty()) {
@@ -118,7 +117,7 @@ fun SearchScreen(navController: NavController, container: AppContainer) {
                         }
                     }
                     if (res.people.isNotEmpty()) {
-                        SectionTitle("মানুষ (" + BnText.toBnDigits(res.people.size.toString()) + ")")
+                        SectionTitle("ব্যক্তিগত ধার (" + BnText.toBnDigits(res.people.size.toString()) + ")")
                         res.people.forEach { person ->
                             HitRow(
                                 title = person.name,
@@ -129,12 +128,12 @@ fun SearchScreen(navController: NavController, container: AppContainer) {
                         }
                     }
                     if (res.loans.isNotEmpty()) {
-                        SectionTitle("ঋণ (" + BnText.toBnDigits(res.loans.size.toString()) + ")")
+                        SectionTitle("লোন (" + BnText.toBnDigits(res.loans.size.toString()) + ")")
                         res.loans.forEach { loan ->
                             HitRow(
                                 title = loan.loanName.ifBlank { loan.institution },
                                 subtitle = "${loan.institution} · বাকি ${Money.format(loan.remainingPaisa.coerceAtLeast(0))}",
-                                toneLabel = "ঋণ",
+                                toneLabel = "লোন",
                                 onClick = { navController.navigate(Routes.loanDetail(loan.id)) },
                             )
                         }
@@ -151,7 +150,7 @@ fun SearchScreen(navController: NavController, container: AppContainer) {
                         }
                     }
                     if (res.debts.isNotEmpty()) {
-                        SectionTitle("ধারের এন্ট্রি (" + BnText.toBnDigits(res.debts.size.toString()) + ")")
+                        SectionTitle("ধারের হিসাব (" + BnText.toBnDigits(res.debts.size.toString()) + ")")
                         res.debts.forEach { debt ->
                             HitRow(
                                 title = "${debt.personName} — ${Money.format(debt.amountPaisa)}",
