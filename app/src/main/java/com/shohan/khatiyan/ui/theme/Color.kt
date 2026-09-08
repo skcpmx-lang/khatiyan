@@ -35,9 +35,7 @@ val ChartPalette = listOf(
     Color(0xFF0B5C43),
     Color(0xFFD9A62E),
     Color(0xFF16607A),
-    Color(0xFF7B4FA6),
     Color(0xFFC05746),
     Color(0xFF4C8C2B),
-    Color(0xFFB0447A),
     Color(0xFF566A77),
 )

@@ -198,13 +198,22 @@ fun DashboardScreen(navController: NavController, container: AppContainer) {
                             }
                         }
                         Spacer(Modifier.height(14.dp))
+                        val points = snap?.trend ?: emptyList()
+                        val hasFlow = points.any { it.incomePaisa > 0L || it.expensePaisa > 0L || it.repaidPaisa > 0L }
+                        if (!hasFlow) {
+                            Spacer(Modifier.height(6.dp))
+                            Text(
+                                "আয়-ব্যয়ের ধারা দেখানোর মতো হিসাব এখনো যোগ করা হয়নি।",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        } else {
                         Text(
                             "গত ৬ মাসের ধারা",
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Spacer(Modifier.height(4.dp))
-                        val points = snap?.trend ?: emptyList()
                         GroupedBarChart(
                             groups = points.map {
                                 BarGroup(
@@ -226,6 +235,7 @@ fun DashboardScreen(navController: NavController, container: AppContainer) {
                             LegendDot("আয়", KhatiyanBrand.Primary)
                             LegendDot("ব্যয়", Color(0xFFC05746))
                             LegendDot("পরিশোধ", KhatiyanBrand.GoldBright)
+                        }
                         }
                     }
                 }

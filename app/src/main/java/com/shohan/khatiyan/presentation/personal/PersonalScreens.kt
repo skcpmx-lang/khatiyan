@@ -149,7 +149,7 @@ fun PeopleListContent(navController: NavController, container: AppContainer, mod
         )
         if (state.rows.isEmpty()) {
             EmptyState(
-                title = if (state.query.isNotBlank()) "এই নামে কাউকে পাওয়া যায়নি" else "তালিকা এখন খালি",
+                title = if (state.query.isNotBlank()) "এই নামে কাউকে পাওয়া যায়নি" else "এখনো কোনো নাম যোগ করা হয়নি",
                 subtitle = "বন্ধু, আত্মীয় বা পরিচিত সবার ধার-দেনার হিসাব এখানে রাখুন।",
                 actionLabel = if (state.query.isBlank()) "নতুন ব্যক্তি যোগ করুন" else null,
                 onAction = { navController.navigate(Routes.personEdit()) },

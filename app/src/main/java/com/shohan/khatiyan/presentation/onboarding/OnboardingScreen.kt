@@ -202,7 +202,7 @@ private fun WelcomePage() {
         )
         Spacer(Modifier.height(10.dp))
         Text(
-            "সব হিসাব, এক জায়গায়।",
+            "আপনার দৈনন্দিন হিসাবগুলো সহজে গুছিয়ে রাখুন।",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

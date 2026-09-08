@@ -132,7 +132,7 @@ fun ShopListContent(
         if (state.rows.isEmpty()) {
             EmptyState(
                 title = if (state.query.isNotBlank()) "এই নামে কোনো দোকান নেই" else "এখনো কোনো দোকান যোগ করা হয়নি",
-                subtitle = "প্রতিটি দোকানের নিজস্ব খাতা থাকবে — বাকি, পণ্যের বিবরণ আর পরিশোধ, সব এক জায়গায়।",
+                subtitle = "কোন দোকান থেকে কী নিয়েছেন আর কত টাকা বাকি আছে — সব এক জায়গায়।",
                 actionLabel = if (state.query.isBlank()) "+ নতুন দোকান" else null,
                 onAction = { navController.navigate(Routes.shopEdit()) },
             )

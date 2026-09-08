@@ -278,7 +278,7 @@ fun CashflowScreen(navController: NavController, container: AppContainer) {
                             item {
                                 EmptyState(
                                     "এই সময়ের মধ্যে কোনো আয় নেই",
-                                    "উপরের + থেকে বেতন, ব্যবসা বা যেকোনো আয় যোগ করুন।",
+                                    "বেতন, ব্যবসা বা যেকোনো আয় নিচের + থেকে যোগ করুন।",
                                 )
                             }
                         }
@@ -298,7 +298,7 @@ fun CashflowScreen(navController: NavController, container: AppContainer) {
                             item {
                                 EmptyState(
                                     "এই সময়ের মধ্যে কোনো ব্যয় নেই",
-                                    "বাজার, যাতায়াত, বিল — প্রতিদিনের খরচ এখানে লিখে রাখুন।",
+                                    "বাজার, যাতায়াত, বিল — নিচের + থেকে নতুন ব্যয় যোগ করুন।",
                                 )
                             }
                         }
@@ -579,14 +579,14 @@ private fun CashEntryEditor(
                 DateField("তারিখ", f.dateIso, { v -> vm.update { it.copy(dateIso = v) } })
                 Spacer(Modifier.height(8.dp))
                 if (income) {
-                    com.shohan.khatiyan.ui.components.KhatiyanTextField(f.source, { v -> vm.update { it.copy(source = v) } }, "উৎস (যেমন: অফিস / ফ্রিল্যান্স ক্লায়েন্ট)")
+                    com.shohan.khatiyan.ui.components.KhatiyanTextField(f.source, { v -> vm.update { it.copy(source = v) } }, "আয়ের উৎস (যেমন: অফিস / ফ্রিল্যান্স)")
                 } else {
                     com.shohan.khatiyan.ui.components.KhatiyanTextField(f.place, { v -> vm.update { it.copy(place = v) } }, "কোথায় খরচ (ঐচ্ছিক)")
                 }
             }
             AppCard {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("ক্যাটাগরি", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                    Text("ব্যয়ের খাত", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
                     androidx.compose.material3.TextButton(onClick = { showAddCat = true }) { Text("+ নতুন") }
                 }
                 Spacer(Modifier.height(4.dp))

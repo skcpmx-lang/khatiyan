@@ -29,6 +29,10 @@ val KhatiyanTypography = Typography(
         fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold,
         fontSize = 24.sp, lineHeight = 32.sp,
     ),
+    displaySmall = TextStyle(
+        fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold,
+        fontSize = 28.sp, lineHeight = 36.sp,
+    ),
     headlineSmall = TextStyle(
         fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp, lineHeight = 28.sp,

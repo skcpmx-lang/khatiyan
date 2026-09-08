@@ -164,7 +164,7 @@ fun LoanListContent(
         )
         if (state.rows.isEmpty()) {
             EmptyState(
-                title = if (state.query.isNotBlank()) "এই নামে কোনো লোন নেই" else "কোনো লোন যোগ করা হয়নি",
+                title = if (state.query.isNotBlank()) "এই নামে কোনো লোন নেই" else "এখনো কোনো লোন যোগ করা হয়নি",
                 subtitle = "ব্যাংক বা এনজিওর লোন — কিস্তির সময়, বকেয়া আর বাকিটা খতিয়ান সামলে নেবে।",
                 actionLabel = if (state.query.isBlank()) "+ নতুন লোন" else null,
                 onAction = { navController.navigate(Routes.loanEdit()) },
@@ -232,7 +232,7 @@ private fun LoanRowCard(row: LoanRow, onClick: () -> Unit) {
             }
             val next = BnDates.fromIso(row.nextDueIso)
             if (next != null) {
-                StatusPill("পরের কিস্তি: ${BnDates.relativeCompact(next)} · ${Money.format(row.installmentPaisa)}", PillTone.INFO)
+                StatusPill("পরবর্তী কিস্তি: ${BnDates.relativeCompact(next)} · ${Money.format(row.installmentPaisa)}", PillTone.INFO)
             }
             if (row.openCount == 0) {
                 StatusPill("পরিশোধ সম্পন্ন ✓", PillTone.SUCCESS)
@@ -399,10 +399,10 @@ fun LoanEditScreen(navController: NavController, container: AppContainer, loanId
                 Spacer(Modifier.height(8.dp))
                 KhatiyanTextField(f.loanName, { v -> vm.update { it.copy(loanName = v) } }, "লোনের নাম (ঐচ্ছিক)")
                 Spacer(Modifier.height(8.dp))
-                AmountInput(f.principal, { v -> vm.update { it.copy(principal = v, error = null) } }, "মূল টাকার অঙ্ক *", "৳")
+                AmountInput(f.principal, { v -> vm.update { it.copy(principal = v, error = null) } }, "লোনের পরিমাণ *", "৳")
                 Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    DateField("তোলার তারিখ", f.startIso, { v -> vm.update { it.copy(startIso = v) } }, Modifier.weight(1f))
+                    DateField("নেওয়ার তারিখ", f.startIso, { v -> vm.update { it.copy(startIso = v) } }, Modifier.weight(1f))
                     KhatiyanTextField(
                         f.rate,
                         { v -> vm.update { it.copy(rate = v.filter { c -> c.isDigit() || c == '.' }.take(7)) } },
@@ -427,7 +427,7 @@ fun LoanEditScreen(navController: NavController, container: AppContainer, loanId
                 )
                 Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AmountInput(f.installment, { v -> vm.update { it.copy(installment = v) } }, "প্রতি কিস্তি", "৳", modifier = Modifier.weight(1f))
+                    AmountInput(f.installment, { v -> vm.update { it.copy(installment = v) } }, "কিস্তির পরিমাণ", "৳", modifier = Modifier.weight(1f))
                     KhatiyanTextField(
                         f.count,
                         { v -> vm.update { it.copy(count = v.filter { c -> c.isDigit() }.take(3)) } },
@@ -632,6 +632,7 @@ fun LoanDetailScreen(navController: NavController, container: AppContainer, loan
                 Row(horizontalArrangement = Arrangement.spacedBy(18.dp)) {
                     LSummary("মোট পরিশোধযোগ্য", Money.format(total))
                     LSummary("পরিশোধিত", Money.format(paid), KhatiyanBrand.Success)
+                    LSummary("বাকি আছে", Money.format(remaining.coerceAtLeast(0L)), KhatiyanBrand.Danger)
                 }
                 Spacer(Modifier.height(12.dp))
                 androidx.compose.material3.Button(

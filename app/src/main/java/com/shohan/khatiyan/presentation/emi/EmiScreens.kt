@@ -151,7 +151,7 @@ fun EmiListContent(navController: NavController, container: AppContainer, modifi
         )
         if (state.rows.isEmpty()) {
             EmptyState(
-                title = if (state.query.isNotBlank()) "এই নামে কিছু পাওয়া যায়নি" else "কোনো EMI যোগ করা হয়নি",
+                title = if (state.query.isNotBlank()) "এই নামে কিছু পাওয়া যায়নি" else "এখনো কোনো EMI যোগ করা হয়নি",
                 subtitle = "মোবাইল, ল্যাপটপ, ফ্রিজ — কিস্তির পণ্য যোগ করুন, খতিয়ান সময়মতো মনে করিয়ে দেবে।",
                 actionLabel = if (state.query.isBlank()) "+ নতুন EMI" else null,
                 onAction = { navController.navigate(Routes.emiEdit()) },
@@ -217,7 +217,7 @@ private fun EmiRowCard(row: EmiRow, onClick: () -> Unit) {
             }
             val next = BnDates.fromIso(row.nextDueIso)
             if (next != null) {
-                StatusPill("পরের কিস্তি ${BnDates.relativeCompact(next)}", PillTone.INFO)
+                StatusPill("পরবর্তী কিস্তি ${BnDates.relativeCompact(next)}", PillTone.INFO)
             } else if (row.openCount == 0) {
                 StatusPill("পরিশোধ সম্পন্ন ✓", PillTone.SUCCESS)
             }
@@ -349,14 +349,14 @@ fun EmiEditScreen(navController: NavController, container: AppContainer, emiId: 
                 Spacer(Modifier.height(8.dp))
                 KhatiyanTextField(f.productName, { v -> vm.update { it.copy(productName = v, error = null) } }, "পণ্যের নাম *")
                 Spacer(Modifier.height(8.dp))
-                KhatiyanTextField(f.seller, { v -> vm.update { it.copy(seller = v) } }, "দোকান / বিক্রেতা")
+                KhatiyanTextField(f.seller, { v -> vm.update { it.copy(seller = v) } }, "কোথা থেকে কিনেছেন")
                 Spacer(Modifier.height(8.dp))
                 DateField("কেনার তারিখ", f.purchaseIso, { v -> vm.update { it.copy(purchaseIso = v) } })
             }
             AppCard {
                 Text("মূল্য ও কিস্তি", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
-                AmountInput(f.totalPrice, { v -> vm.update { it.copy(totalPrice = v, error = null) } }, "মোট মূল্য *", "৳")
+                AmountInput(f.totalPrice, { v -> vm.update { it.copy(totalPrice = v, error = null) } }, "মোট দাম *", "৳")
                 Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     AmountInput(f.downPayment, { v -> vm.update { it.copy(downPayment = v) } }, "অগ্রিম (ডাউন পেমেন্ট)", "৳", Modifier.weight(1f))
@@ -370,11 +370,11 @@ fun EmiEditScreen(navController: NavController, container: AppContainer, emiId: 
                 )
                 Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AmountInput(f.installment, { v -> vm.update { it.copy(installment = v) } }, "প্রতি কিস্তি (ঐচ্ছিক)", "৳", Modifier.weight(1f))
+                    AmountInput(f.installment, { v -> vm.update { it.copy(installment = v) } }, "মাসিক কিস্তি (ঐচ্ছিক)", "৳", Modifier.weight(1f))
                     KhatiyanTextField(
                         f.count,
                         { v -> vm.update { it.copy(count = v.filter { c -> c.isDigit() }.take(3)) } },
-                        "কিস্তির সংখ্যা",
+                        "মোট কিস্তি",
                         modifier = Modifier.weight(1f),
                         keyboardType = androidx.compose.ui.text.input.KeyboardType.Number,
                     )

@@ -76,3 +76,10 @@ sha256sum khatiyan-release-v1.0.0.apk      # must match SHA256SUMS.txt in the re
 ### v1.0.1
 
 UI/UX + Bengali copy refinement on top of v1.0.0 — no schema or logic changes (versionCode 2). Release pipeline unchanged; debug-sign fallback applies unless `KHATIYAN_KEYSTORE_BASE64` is configured.
+
+Second-pass refinement (same 1.0.1 release, re-cut):
+- Loan/EMI forms aligned to the plain-language set: লোনের পরিমাণ, নেওয়ার তারিখ, কিস্তির পরিমাণ, মোট দাম, কোথা থেকে কিনেছেন, মাসিক কিস্তি, মোট কিস্তি; loan detail now shows মোট পরিশোধযোগ্য / পরিশোধিত / বাকি আছে.
+- Cash-flow wording: আয়ের উৎস, ব্যয়ের খাত; empty-state hints point at the bottom “+” (where the FAB actually is).
+- Shop buttons read “বাকী যোগ করুন” / “পেমেন্ট যোগ করুন” per spec; shop-list and people empty states use the “এখনো কোনো…” pattern with spec-verbatim subtitles.
+- Dashboard “গত ৬ মাসের ধারা” chart now hides itself (with a one-line hint) when there is no income/expense/repayment data yet, instead of showing a zero-height empty chart.
+- Settings descriptions and the onboarding welcome subtitle matched to the recommended copy; chart palette condensed to six muted brand tones (violet/pink removed); displaySmall defined at 28sp so the welcome headline is not oversized.

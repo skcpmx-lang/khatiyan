@@ -256,12 +256,12 @@ fun ShopDetailScreen(navController: NavController, container: AppContainer, shop
                         onClick = { showPayment = true },
                         modifier = Modifier.weight(1f),
                         shape = MaterialTheme.shapes.medium,
-                    ) { Text("পরিশোধ যোগ") }
+                    ) { Text("পেমেন্ট যোগ করুন") }
                     androidx.compose.material3.OutlinedButton(
                         onClick = { navController.navigate(Routes.creditEdit(shopId)) },
                         modifier = Modifier.weight(1f),
                         shape = MaterialTheme.shapes.medium,
-                    ) { Text("নতুন বাকী") }
+                    ) { Text("বাকী যোগ করুন") }
                 }
             }
 

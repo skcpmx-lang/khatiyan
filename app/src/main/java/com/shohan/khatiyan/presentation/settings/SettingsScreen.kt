@@ -426,13 +426,13 @@ fun SettingsScreen(navController: NavController, container: AppContainer) {
                 SettingAction(
                     Icons.Outlined.Restore,
                     "ব্যাকআপ থেকে ফিরিয়ে আনুন",
-                    "ব্যাকআপ থেকে তথ্য ফেরালে বর্তমান হিসাব বদলে যাবে। ফেরানোর আগে একটি ব্যাকআপ রেখে নিন।",
+                    "আগে রাখা ব্যাকআপ থেকে হিসাব ফিরিয়ে আনুন। ফেরানোর আগে একটি ব্যাকআপ রেখে নিন।",
                 ) { restoreLauncher.launch(arrayOf("application/json", "text/plain", "*/*")) }
                 Box(Modifier.fillMaxWidth().height(1.dp).background(MaterialTheme.colorScheme.outlineVariant))
                 SettingAction(
                     Icons.Outlined.TableChart,
                     "CSV রপ্তানি",
-                    "লেনদেনগুলো Excel বা Google Sheets-এ ব্যবহারের জন্য নামিয়ে রাখুন।",
+                    "লেনদেনগুলো Excel বা Sheets-এ ব্যবহারের জন্য সংরক্ষণ করুন।",
                 ) {
                     csvLauncher.launch("khatiyan-${BnDates.today().year}-${BnText.toBnDigits(BnDates.today().monthValue.toString())}.csv")
                 }
